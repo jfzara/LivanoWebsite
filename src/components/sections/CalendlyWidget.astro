@@ -1,0 +1,18 @@
+---
+import Container from "../shared/Container.astro";
+---
+
+<section class="py-16 sm:py-20">
+    <Container>
+        <div class="max-w-3xl mx-auto text-center mb-12">
+            <h2 class="text-3xl/tight sm:text-4xl/tight md:text-5xl/tight font-bold text-heading-1">
+                Schedule a Meeting
+            </h2>
+            <p class="mt-4 text-heading-3">
+                Book a time that works best for you to discuss how we can help grow your business.
+            </p>
+        </div>
+        <div class="calendly-inline-widget" data-url="https://calendly.com/livano-livanoagency/30min" style="min-width:320px;height:700px;"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    </Container>
+</section>
