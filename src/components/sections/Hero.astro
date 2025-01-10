@@ -36,8 +36,12 @@ import ByNumber from "./ByNumber.astro";
             </div>
         </div>
 
+        <!-- Remplacement de l'image par une vidéo -->
         <div class="flex flex-1 lg:w-1/2 lg:h-auto relative lg:max-w-none lg:mx-0 mx-auto max-w-3xl">
-            <img src="/images/image1.webp" alt="Hero image" width="2350" height="2359" class="lg:absolute lg:w-full lg:h-full rounded-3xl object-cover lg:max-h-none max-h-96">
+            <video autoplay loop muted playsinline class="lg:absolute lg:w-full lg:h-full rounded-3xl object-cover lg:max-h-none max-h-96">
+                <source src="/videos/video1.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas les vidéos.
+            </video>
         </div>
     </Container>
 
