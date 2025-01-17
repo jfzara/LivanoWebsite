@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Container from '../components/shared/Container.astro';
 import Title from '../components/shared/Title.astro';
+import CalendlyWidget from '../components/sections/CalendlyWidget.astro';
+import Button from '../components/shared/Button.astro';
 import { Resend } from 'resend';
 
 // Initialiser Resend
@@ -37,19 +39,19 @@ if (Astro.request.method === 'POST') {
         });
 
         if (error) {
-            console.error('Erreur lors de l\'envoi:', error);
-            errorMessage = 'Une erreur est survenue lors de l\'envoi du message.';
+            console.error('Error sending email:', error);
+            errorMessage = 'An error occurred while sending your message.';
         } else {
-            successMessage = 'Message envoyé avec succès!';
+            successMessage = 'Message sent successfully!';
         }
     } catch (error) {
-        console.error('Erreur:', error);
-        errorMessage = 'Une erreur est survenue lors de l\'envoi du message.';
+        console.error('Error:', error);
+        errorMessage = 'An error occurred while sending your message.';
     }
 }
 ---
 
-<Layout title="Contact - Prenez rendez-vous">
+<Layout title="Get in touch">
     <main class="pt-32">
         <Container>
             <div class="max-w-3xl mx-auto">
@@ -58,42 +60,61 @@ if (Astro.request.method === 'POST') {
                         Inquiry Form
                     </Title>
                     
-                    {errorMessage && (
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{errorMessage}</span>
-                        </div>
-                    )}
+                    <form class="mt-8 relative" method="post" lang="en">
+                        {errorMessage && (
+                            <div class="absolute -top-8 left-0 right-0 flex justify-center" role="alert">
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-red-50 dark:bg-red-500/5 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{errorMessage}</span>
+                                </div>
+                            </div>
+                        )}
 
-                    {successMessage && (
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{successMessage}</span>
-                        </div>
-                    )}
-                    
-                    <form class="mt-8" method="post">
+{successMessage && (
+    <div class="absolute -top-8 left-0 right-0 flex justify-center" role="alert">
+        <div class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs success-container">
+            <span class="success-text">Sent</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 success-checkmark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+    </div>
+)}
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="form-group">
                                 <input 
-                                    type="text" 
-                                    name="name" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
-                                    placeholder="*Name" 
-                                    required
-                                />
+                                type="text" 
+                                name="name" 
+                                lang="en"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
+                                placeholder="*Full Name" 
+                                required
+                                minlength="2"
+                                oninvalid="this.setCustomValidity('Please enter your full name (minimum 2 letters)')"
+                                oninput="this.setCustomValidity('')"
+                            />
                             </div>
                             <div class="form-group">
                                 <input 
-                                    type="email" 
-                                    name="email" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
-                                    placeholder="*Email" 
-                                    required
-                                />
+    type="email" 
+    name="email"
+    lang="en" 
+    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
+    placeholder="*Email" 
+    required
+    oninvalid="this.setCustomValidity('Please enter a valid email address')"
+    oninput="this.setCustomValidity('')"
+/>
+
                             </div>
                             <div class="form-group">
                                 <input 
                                     type="text" 
                                     name="company" 
+                                    lang="en"
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
                                     placeholder="*Company name" 
                                     required
@@ -101,30 +122,36 @@ if (Astro.request.method === 'POST') {
                             </div>
                             <div class="form-group">
                                 <input 
-                                    type="tel" 
-                                    name="phone" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
-                                    placeholder="Phone Number" 
-                                    pattern="[0-9()#&+*-=.]+"
-                                />
+                                type="tel" 
+                                name="phone"
+                                lang="en" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
+                                placeholder="Phone Number (Optional)" 
+                                pattern="[0-9+\-\(\)\s]*"
+                                oninvalid="this.setCustomValidity('Please use only numbers and these symbols: + - ( )')"
+                                oninput="this.setCustomValidity('')"
+                            />
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="block text-sm font-medium text-heading-2 dark:text-heading-2 mb-2">Message</label>
                                 <textarea 
                                     name="message" 
+                                    lan<textarea 
+                                    name="message"
+                                    lang="en" 
                                     rows="4" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
-                                    placeholder="Anything we need to know before we start chatting"
+                                    placeholder="Message"
+                                    required
+                                    oninvalid="this.setCustomValidity('Please enter your message')"
+                                    oninput="this.setCustomValidity('')"
                                 ></textarea>
                             </div>
                         </div>
-                        <div class="mt-6">
-                            <button 
-                                type="submit" 
-                                class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors duration-200"
-                            >
-                                Submit
-                            </button>
+                        <div class="mt-6 flex justify-center">
+                            <Button variant={"primary"} type="submit">
+                                <span class="text-white relative z-[5]">Submit</span>
+                            </Button>
                         </div>
                     </form>
 
@@ -135,71 +162,65 @@ if (Astro.request.method === 'POST') {
                     </div>
                 </div>
 
-                <div class="mt-16">
-                    <Title>
-                        Prenez rendez-vous
-                    </Title>
-                    
-                    <div class="calendly-wrapper">
-                        <div 
-                            id="calendly-section"
-                            class="calendly-inline-widget" 
-                            data-url="https://calendly.com/livano-livanoagency/30min" 
-                            style="min-width:320px;height:700px;">
-                        </div>
-                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-                    </div>
-                </div>
+                <CalendlyWidget/>
             </div>
         </Container>
     </main>
 </Layout>
-
 <style>
-    /* Wrapper pour le widget Calendly */
-    .calendly-wrapper {
-        position: relative;
-        width: 100%;
-        height: 700px;
-        overflow: hidden !important;
+    @keyframes success-flash {
+        0%, 100% {
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+        }
+        50% {
+            background-color: var(--success-bg-flash);
+            border-color: var(--success-border-flash);
+        }
     }
 
-    /* Widget Calendly */
-    .calendly-inline-widget {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden !important;
-        -ms-overflow-style: none !important;
-        scrollbar-width: none !important;
+    @keyframes checkmark-flash {
+        0%, 100% {
+            stroke: var(--success-icon);
+            transform: scale(1);
+        }
+        50% {
+            stroke: var(--success-icon-flash);
+            transform: scale(1.2);
+        }
     }
 
-    .calendly-inline-widget::-webkit-scrollbar {
-        display: none !important;
-        width: 0 !important;
+    .success-container {
+        animation: success-flash 0.6s ease-in-out 3;
+        border: 1.5px solid;
+        background-color: var(--success-bg);
+        border-color: var(--success-border);
     }
 
-    /* Styles pour l'iframe générée */
-    :global(iframe[src*="calendly"]) {
-        overflow: hidden !important;
-        -ms-overflow-style: none !important;
-        scrollbar-width: none !important;
+    .success-checkmark {
+        animation: checkmark-flash 0.6s ease-in-out 3;
+        stroke: var(--success-icon);
     }
 
-    :global(iframe[src*="calendly"]::-webkit-scrollbar) {
-        display: none !important;
-        width: 0 !important;
+    .success-text {
+        @apply dark:text-blue-400 text-blue-600;
     }
 
-    /* Masquer toutes les scrollbars */
-    :global(.simplebar-scrollbar),
-    :global(.simplebar-track) {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
+    :root {
+        --success-bg: rgb(255, 255, 255);
+        --success-bg-flash: rgba(59, 130, 246, 0.1);
+        --success-border: rgb(59, 130, 246);
+        --success-border-flash: rgba(59, 130, 246, 0.8);
+        --success-icon: rgb(59, 130, 246);
+        --success-icon-flash: rgba(59, 130, 246, 0.8);
+    }
+
+    :root.dark {
+        --success-bg: rgba(59, 130, 246, 0.2);
+        --success-bg-flash: rgba(147, 197, 253, 0.3);
+        --success-border: rgb(147, 197, 253);
+        --success-border-flash: rgba(147, 197, 253, 0.8);
+        --success-icon: rgb(147, 197, 253);
+        --success-icon-flash: rgba(147, 197, 253, 0.8);
     }
 </style>

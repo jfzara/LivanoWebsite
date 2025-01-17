@@ -2,6 +2,7 @@
 export interface Props{
     className?:string,
     variant:"primary"|"secondary"
+    type?: "submit" | "button" | "reset"
 }
 
 const {className, variant} = Astro.props

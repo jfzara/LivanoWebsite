@@ -1,6 +1,6 @@
 ---
-import Container from "../shared/Container.astro";
-import Title from "../shared/Title.astro";
+import Container from "../../components/shared/Container.astro";
+import Title from "../../components/shared/Title.astro";
 ---
 
 <section>
@@ -10,26 +10,82 @@ import Title from "../shared/Title.astro";
                 Trusted by companies like
             </Title>
         </div>
-        <div class="flex justify-center flex-wrap gap-4">
+        <div class="flex justify-center flex-wrap gap-3">
             <!-- Metro -->
-            <div class="p-4 sm:p-5 rounded-xl bg-body border border-box-border group">
-                <img src="/images/metro-1.jpg" alt="Metro" class="w-40 h-[calc(8rem+0.5rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
+            <div class="p-3 rounded-xl bg-body border border-gray-200/20 group h-fit">
+                <img 
+                    src="/images/metro-1-noBG.png" 
+                    data-light-src="/images/metro-1-noBG-light.jpg"
+                    data-dark-src="/images/metro-1-noBG-dark.png"
+                    alt="Metro" 
+                    class="theme-aware-image w-28 sm:w-36 md:w-56 h-[calc(8rem)] sm:h-[calc(10rem)] md:h-[calc(16rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
             </div>
 
             <!-- Voile Chic -->
-            <div class="p-4 sm:p-5 rounded-xl bg-body border border-box-border group">
-                <img src="/images/VoileChic.jpg" alt="Voile Chic" class="w-40 h-[calc(8rem+0.5rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
+            <div class="p-3 rounded-xl bg-body border border-gray-200/20 group h-fit">
+                <img 
+                    src="/images/VoileChic-noBG.jpg" 
+                    data-light-src="/images/VoileChic.jpg"
+                    data-dark-src="/images/VoileChic-noBG-dark.png"
+                    alt="Voile Chic" 
+                    class="theme-aware-image w-24 sm:w-32 md:w-52 h-[calc(7rem)] sm:h-[calc(9rem)] md:h-[calc(15rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
             </div>
 
             <!-- WorkJam -->
-            <div class="p-4 sm:p-5 rounded-xl bg-body border border-box-border group">
-                <img src="/images/WorkJam2.jpg" alt="WorkJam" class="w-40 h-[calc(8rem+0.5rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
+            <div class="p-3 rounded-xl bg-body border border-gray-200/20 group h-fit">
+                <img 
+                    src="/images/WorkJam2.png" 
+                    data-light-src="/images/WorkJam2.jpg"
+                    data-dark-src="/images/WorkJam2-noBG.png"
+                    alt="WorkJam" 
+                    class="theme-aware-image w-24 sm:w-32 md:w-52 h-[calc(7rem)] sm:h-[calc(9rem)] md:h-[calc(15rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
             </div>
 
             <!-- Social Snowball -->
-            <div class="p-4 sm:p-5 rounded-xl bg-body border border-box-border group">
-                <img src="/images/SocialSnowballBrand.jpg" alt="Social Snowball" class="w-40 h-[calc(8rem+0.5rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
+            <div class="p-3 rounded-xl bg-body border border-gray-200/20 group h-fit">
+                <img 
+                    src="/images/SocialSnowball-noBG.png" 
+                    data-light-src="/images/SocialSnowball-noBG.png"
+                    data-dark-src="/images/SocialSnowball-noBG.png"
+                    alt="Social Snowball" 
+                    class="theme-aware-image w-24 sm:w-32 md:w-52 h-[calc(7rem)] sm:h-[calc(9rem)] md:h-[calc(15rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
             </div>
         </div>
     </Container>
 </section>
+
+<script>
+    // Fonction pour mettre à jour toutes les images en fonction du thème
+    function updateThemeAwareImages() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const themeAwareImages = document.querySelectorAll('.theme-aware-image');
+        
+        themeAwareImages.forEach(image => {
+            const currentSrc = image.getAttribute('src') || '';
+            const lightSrc = image.getAttribute('data-light-src') || '';
+            const darkSrc = image.getAttribute('data-dark-src') || '';
+            
+            if (lightSrc && darkSrc) {
+                image.setAttribute('src', isDark ? darkSrc : lightSrc);
+            }
+        });
+    }
+
+    // Observer les changements de thème
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                updateThemeAwareImages();
+            }
+        });
+    });
+
+    // Démarrer l'observation
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
+
+    // Mettre à jour les images au chargement initial
+    updateThemeAwareImages();
+</script>

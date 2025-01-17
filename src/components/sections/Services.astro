@@ -16,23 +16,24 @@ type ServicesProps = {
 ---
 
 <section id="services">
-    <Container className="space-y-10 md:sapce-y-12">
-        <div class="text-center max-w-3xl mx-auto space-y-4">
+    <Container className="space-y-0 md:space-y-0">
+        <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
             <Title>
-                What we offer
+                Our packages include
             </Title>
-            <Paragraph>
-         
+            <Paragraph className="text-center">
+                We specialize in delivering tailored affiliate marketing solutions designed to elevate your brand's reach, revenue, and reputation.
+                <br><br>
             </Paragraph>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
             {
-                    services.map((service: ServicesProps) => {
+                services.map((service: ServicesProps) => {
                     return (
-                            <Service title={service.title} description={service.description} icon={service.icon}>
-                            </Service>
-                            );
-                    })
+                        <Service title={service.title} description={service.description} icon={service.icon}>
+                        </Service>
+                    );
+                })
             }
         </div>
     </Container>

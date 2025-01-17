@@ -11,21 +11,31 @@ const { title, description, icon } = Astro.props;
 ---
 
 <div class="service-card">
-    <div class="card-content p-5 sm:p-6 lg:p-8 rounded-3xl bg-box-bg shadow-lg shadow-box-shadow relative overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl">
-        <div class="border-frame"></div>
-        
-        <div class="flex flex-col items-center justify-center text-center h-full gap-4">
-            <div class="rounded-xl bg-gray-300 dark:bg-gray-950 p-3 text-heading-1 w-max">
-                <slot set:html={icon} />
+    <div class="card-content rounded-3xl relative min-h-[292px]"> <!-- Augmenté de 0.75rem (12px) -->
+        <div class="content-wrapper relative rounded-3xl">
+            <!-- Contenu principal (toujours visible) -->
+            <div class="main-content flex flex-col items-center justify-center text-center gap-4 relative z-10 bg-box-bg border border-gray-200/20 rounded-3xl h-[292px]"> <!-- Hauteur fixe ajustée -->
+                <div class="icon-wrapper w-16 h-16 rounded-xl bg-gray-300 dark:bg-gray-950 flex items-center justify-center">
+                    <div class="icon-container w-10 h-10 flex items-center justify-center text-gray-800 dark:text-white">
+                        <div class="w-full h-full">
+                            <slot set:html={icon} />
+                        </div>
+                    </div>
+                </div>
+                <h2 class="text-lg md:text-xl font-semibold text-heading-2">
+                    {title}
+                </h2>
+                
+                <!-- Bouton + -->
+                <button class="expand-btn w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 transition-transform duration-300">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </button>
             </div>
-            <h2 class="text-lg md:text-xl font-semibold text-heading-2">
-                {title}
-            </h2>
-        </div>
-        
-        <div class="description-overlay opacity-0 hover:opacity-100 absolute inset-0 bg-box-bg/95 transition-all duration-300 p-6 flex flex-col justify-center">
-            <div class="transform translate-y-4 hover:translate-y-0 transition-transform duration-300">
-                <h3 class="text-lg font-semibold text-heading-2 mb-3">{title}</h3>
+
+            <!-- Description (initialement cachée) -->
+            <div class="description-content absolute top-[calc(100%+1rem)] left-0 right-0 z-0 opacity-0 px-4">
                 <Paragraph>
                     {description}
                 </Paragraph>
@@ -35,48 +45,112 @@ const { title, description, icon } = Astro.props;
 </div>
 
 <style>
-    .service-card {
-        height: 400px;
-        position: relative;
-    }
+.service-card {
+    position: relative;
+    width: 100%;
+}
 
-    .card-content {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
+.card-content {
+    transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    position: relative;
+}
 
-    .border-frame {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        border: 1px solid transparent;
-        border-image: linear-gradient(
-            to bottom,
-            transparent 0%,
-            transparent 5%,
-            #e5e7eb 50%,
-            #e5e7eb 100%
-        ) 1 100%;
-    }
+.content-wrapper {
+    transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-    .description-overlay {
-        pointer-events: none;
-        backdrop-filter: blur(4px);
-    }
+.main-content {
+    transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
-    .service-card:hover .description-overlay {
-        pointer-events: auto;
-    }
+.description-content {
+    transition: all 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateY(10px);
+}
 
-    .description-overlay {
-        overflow-y: auto;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
+/* État actif */
+.service-card.active .card-content {
+    min-height: 436px; /* Augmenté de 0.75rem (12px) */
+}
 
-    .description-overlay::-webkit-scrollbar {
-        display: none;
+.service-card.active .content-wrapper {
+    transform: translateY(-15%);
+}
+
+.service-card.active .description-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.service-card.active .expand-btn svg {
+    transform: rotate(45deg);
+}
+
+:global(.icon-container svg) {
+    width: 100%;
+    height: 100%;
+}
+
+/* Hover effect pour desktop */
+@media (min-width: 768px) {
+    .expand-btn:hover {
+        transform: scale(1.1);
     }
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll<HTMLElement>('.service-card');
+    let activeCard: HTMLElement | null = null;
+    let timer: number | null = null;
+
+    document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (!target.closest('.service-card') && !target.closest('.expand-btn') && activeCard) {
+            activeCard.classList.remove('active');
+            activeCard = null;
+        }
+    });
+
+    cards.forEach(card => {
+        const expandBtn = card.querySelector('.expand-btn');
+
+        function hideCard(): void {
+            card.classList.remove('active');
+            if (activeCard === card) {
+                activeCard = null;
+            }
+        }
+
+        function showCard(e: Event): void {
+            e.stopPropagation();
+            
+            if (card === activeCard) {
+                hideCard();
+                return;
+            }
+
+            if (activeCard) {
+                activeCard.classList.remove('active');
+            }
+            
+            card.classList.add('active');
+            activeCard = card;
+            
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(hideCard, 5000);
+        }
+
+        expandBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showCard(e);
+        });
+    });
+});
+</script>

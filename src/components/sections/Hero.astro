@@ -22,12 +22,12 @@ import ByNumber from "./ByNumber.astro";
             <Paragraph className="mt-8">
                 We drive exponential revenue growth for your brand through influencer affiliate marketing and social referrals.
             </Paragraph>
-            <div class="mt-10  w-full flex max-w-md mx-auto lg:mx-0">
-                <div class="flex sm:flex-row flex-col gap-5 w-full">
+            <div class="mt-10 flex justify-center lg:justify-start w-full">
+                <div class="flex sm:flex-row flex-col gap-5">
                     <a href="#calendly-section">
                         <Button variant={"primary"} className={"min-w-max text-white"}>
                             <span class="flex relative z-[5]">
-                                Get started
+                                Get in touch
                             </span>
                         </Button>
                     </a>
@@ -39,7 +39,7 @@ import ByNumber from "./ByNumber.astro";
             <div class="phone-frame">
                 <video autoplay loop muted playsinline class="phone-video">
                     <source src="/videos/video1.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas les vidéos.
+                    Your browser does not support videos.
                 </video>
             </div>
         </div>
@@ -91,7 +91,7 @@ import ByNumber from "./ByNumber.astro";
     }
 
     :root {
-        --phone-frame-color: #7da9c79a;
+        --phone-frame-color: rgba(241, 245, 249, 0.8); 
     }
 
     :root.dark {

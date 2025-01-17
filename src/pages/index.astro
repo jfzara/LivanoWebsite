@@ -5,18 +5,24 @@ import Services from '../components/sections/Services.astro';
 import AboutUs from '../components/sections/AboutUs.astro';
 import Features from '../components/sections/Features.astro';
 import CTA from '../components/sections/CTA.astro';
+import ContactForm from '../forms/ContactForm.astro';
 import Brands from '../components/sections/Brands.astro';
 import CalendlyWidget from '../components/sections/CalendlyWidget.astro';
 ---
 
-<Layout title="Welcome to AgenceX">
-	<main class="flex flex-col gap-y-20 md:gap-y-32 overflow-hidden">
-		<Hero/>
-		<Services/>
-		<Brands/>
-		<AboutUs/>
-		<Features/>
-		<CTA/>
-		<CalendlyWidget/>
+<Layout title="Welcome to Livano">
+	<main class="flex flex-col overflow-hidden pt-32">
+		<div class="space-y-12 md:space-y-20">
+			<Hero/>
+			<Services/>
+			<Brands/>
+			<AboutUs/>
+			<Features/>
+		</div>
+		<div class="space-y-8 md:space-y-12 mt-12 md:mt-20">
+			<CTA/>
+			<ContactForm />
+			<CalendlyWidget/>
+		</div>
 	</main>
 </Layout>
