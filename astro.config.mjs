@@ -8,5 +8,7 @@ export default defineConfig({
   vite: {
     envPrefix: 'RESEND_'
   },
-  adapter: cloudflare()
+  adapter: cloudflare({
+    mode: 'directory'
+  })
 });
