@@ -1,4 +1,3 @@
 name = "agencex-astro"
 compatibility_date = "2023-11-21"
-node_compat = true
 pages_build_output_dir = "dist"
