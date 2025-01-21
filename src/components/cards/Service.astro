@@ -11,10 +11,10 @@ const { title, description, icon } = Astro.props;
 ---
 
 <div class="service-card">
-    <div class="card-content rounded-3xl relative min-h-[292px]"> <!-- Augmenté de 0.75rem (12px) -->
+    <div class="card-content rounded-3xl relative min-h-[292px]">
         <div class="content-wrapper relative rounded-3xl">
             <!-- Contenu principal (toujours visible) -->
-            <div class="main-content flex flex-col items-center justify-center text-center gap-4 relative z-10 bg-box-bg border border-gray-200/20 rounded-3xl h-[292px]"> <!-- Hauteur fixe ajustée -->
+            <div class="main-content flex flex-col items-center justify-center text-center gap-4 relative z-10 bg-box-bg border border-gray-200/20 rounded-3xl h-[292px]">
                 <div class="icon-wrapper w-16 h-16 rounded-xl bg-gray-300 dark:bg-gray-950 flex items-center justify-center">
                     <div class="icon-container w-10 h-10 flex items-center justify-center text-gray-800 dark:text-white">
                         <div class="w-full h-full">
@@ -26,13 +26,12 @@ const { title, description, icon } = Astro.props;
                     {title}
                 </h2>
                 
-                <!-- Bouton + -->
+                <!-- Bouton flèche vers le bas -->
                 <button class="expand-btn w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center transition-all duration-300 hover:bg-gray-300 dark:hover:bg-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 transition-transform duration-300">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l-6.75-6.75M12 19.5l6.75-6.75" />
                     </svg>
                 </button>
-            </div>
 
             <!-- Description (initialement cachée) -->
             <div class="description-content absolute top-[calc(100%+1rem)] left-0 right-0 z-0 opacity-0 px-4">
@@ -75,7 +74,7 @@ const { title, description, icon } = Astro.props;
 
 /* État actif */
 .service-card.active .card-content {
-    min-height: 436px; /* Augmenté de 0.75rem (12px) */
+    min-height: 436px;
 }
 
 .service-card.active .content-wrapper {
@@ -88,7 +87,7 @@ const { title, description, icon } = Astro.props;
 }
 
 .service-card.active .expand-btn svg {
-    transform: rotate(45deg);
+    transform: rotate(180deg);
 }
 
 :global(.icon-container svg) {
