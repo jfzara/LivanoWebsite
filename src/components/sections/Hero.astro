@@ -3,6 +3,12 @@ import Button from "../shared/Button.astro";
 import Container from "../shared/Container.astro";
 import Paragraph from "../shared/Paragraph.astro";
 
+const videos = [
+    "/videos/video1.mp4",
+    "/videos/video2.mp4",
+    "/videos/video3.mp4",
+    "/videos/video4.mp4"
+];
 ---
 
 <section id="hero" class="relative pt-32 lg:pt-36">
@@ -37,16 +43,74 @@ import Paragraph from "../shared/Paragraph.astro";
 
         <div class="flex flex-1 lg:w-1/2 lg:h-auto relative lg:max-w-none lg:mx-0 mx-auto max-w-3xl">
             <div class="phone-frame">
-                <video autoplay loop muted playsinline class="phone-video">
-                    <source src="/videos/video1.mp4" type="video/mp4">
-                    Your browser does not support videos.
-                </video>
+                <div class="video-container">
+                    {videos.map((video, index) => (
+                        <video 
+                            class={`phone-video ${index === 0 ? 'active' : ''}`}
+                            muted 
+                            playsinline
+                            data-index={index}
+                        >
+                            <source src={video} type="video/mp4">
+                            Your browser does not support videos.
+                        </video>
+                    ))}
+                </div>
             </div>
         </div>
     </Container>
-
-
 </section>
+
+<script>
+    function setupVideoCarousel() {
+        const videos = document.querySelectorAll<HTMLVideoElement>('.phone-video');
+        let currentIndex = 0;
+        const duration = 2500;
+
+        // Précharger toutes les vidéos
+        videos.forEach(video => {
+            video.load();
+        });
+
+        function playNextVideo() {
+            const currentVideo = videos[currentIndex];
+            const nextIndex = (currentIndex + 1) % videos.length;
+            const nextVideo = videos[nextIndex] as HTMLVideoElement;
+
+            // Préparer la prochaine vidéo
+            nextVideo.currentTime = 0;
+            
+            // Commencer à jouer la prochaine vidéo avant la transition
+            nextVideo.play().catch(error => {
+                console.error('Error playing video:', error);
+            });
+
+            // Attendre un peu que la vidéo commence
+            setTimeout(() => {
+                currentVideo.classList.add('previous');
+                currentVideo.classList.remove('active');
+                nextVideo.classList.remove('previous');
+                nextVideo.classList.add('active');
+                
+                currentIndex = nextIndex;
+            }, 50);
+
+            setTimeout(playNextVideo, duration);
+        }
+
+        // Démarrer avec la première vidéo
+        if (videos.length > 0) {
+            const firstVideo = videos[0] as HTMLVideoElement;
+            firstVideo.classList.add('active');
+            firstVideo.play().catch(error => {
+                console.error('Error playing first video:', error);
+            });
+            setTimeout(playNextVideo, duration);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', setupVideoCarousel);
+</script>
 
 <style>
     .phone-frame {
@@ -59,6 +123,7 @@ import Paragraph from "../shared/Paragraph.astro";
         padding: 10px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         border: 8px solid var(--phone-frame-color);
+        overflow: hidden;
     }
 
     .phone-frame::before {
@@ -75,12 +140,38 @@ import Paragraph from "../shared/Paragraph.astro";
         z-index: 2;
     }
 
+    .video-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
     .phone-video {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 30px;
-        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-100%);
+        transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1),
+                    opacity 0.3s ease-out;
+        will-change: transform, opacity;
+    }
+
+    .phone-video.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .phone-video.previous {
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform 0.6s cubic-bezier(0.32, 0, 0.67, 0),
+                    opacity 0.3s ease-out;
     }
 
     @media (min-width: 1024px) {
