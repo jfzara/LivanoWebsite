@@ -1,6 +1,7 @@
 ---
 import Button from "../shared/Button.astro";
 import Paragraph from "../shared/Paragraph.astro";
+import ContactForm from "../../forms/ContactForm.astro";
 ---
 
 <section id="cta" class="pb-20 relative">
@@ -48,12 +49,9 @@ import Paragraph from "../shared/Paragraph.astro";
         delectus architecto ullam earum
       </Paragraph>
       <div class="mx-auto max-w-md sm:max-w-xl pt-10">
-        <a href="/contact">
-          <Button variant={"primary"}>
-            <span class="text-white relative z-[5]">Get In Touch</span>
-          </Button>
-        </a>
+        <ContactForm />
       </div>
     </div>
   </div>
+ 
 </section>

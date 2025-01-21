@@ -10,14 +10,19 @@ interface Props {
 const { title, description, className = "" } = Astro.props;
 ---
 
-<div class:list={["p-5 sm:p-6 lg:p-8 rounded-3xl border border-box-border bg-box-bg shadow-lg shadow-box-shadow relative overflow-hidden flex flex-col items-center midmd:items-start", className]}>
-    <div class="rounded-xl bg-gray-300 dark:bg-gray-950 p-3 text-heading-1 w-max relative mx-auto midmd:mx-0">
-        <slot name="icon"/>
+<div class:list={[
+    "p-5 sm:p-6 lg:p-8 rounded-3xl relative overflow-hidden flex flex-col items-center text-center", 
+    className
+]}>
+    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-white to-blue-50/80 dark:from-gray-800 dark:to-indigo-900/20 flex items-center justify-center border border-gray-300/30 dark:border-gray-700/20 shadow-sm">
+        <div class="w-10 h-10 flex items-center justify-center text-primary/90">
+            <slot name="icon"/>
+        </div>
     </div>
-    <h2 class="md:text-xl font-semibold text-heading-2 mt-6 mb-4 text-center midmd:text-left w-full">
+    <h2 class="md:text-xl font-semibold text-heading-2 mt-6 mb-4 text-center">
         {title}
     </h2>
-    <Paragraph className="text-center midmd:text-left w-full">
+    <Paragraph className="w-full">
         {description}
     </Paragraph>
 </div>
