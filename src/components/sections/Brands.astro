@@ -2,49 +2,68 @@
 import Container from "../../components/shared/Container.astro";
 import Title from "../../components/shared/Title.astro";
 ---
-
 <section>
-    <Container className="space-y-8">
-        <div class="text-center max-w-3xl mx-auto">
-            <Title>
-                Trusted by companies like
-            </Title>
+    <Container className="space-y-4 max-w-4xl mx-auto">
+        <div class="text-center">
+            <Title> Trusted by companies like </Title>
         </div>
-        <div class="flex justify-center flex-wrap gap-3">
-            <!-- Metro -->
-            <div class="p-3 rounded-xl bg-body border border-gray-200/20 group h-fit">
-                <img 
-                    src="/images/metro-1-noBG.png" 
-                    data-light-src="/images/metro-1-noBG-light.jpg"
-                    data-dark-src="/images/metro-1-noBG-dark.png"
-                    alt="Metro" 
-                    class="theme-aware-image w-24 sm:w-32 md:w-52 h-[calc(7rem)] sm:h-[calc(9rem)] md:h-[calc(15rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 justify-items-center">
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
+                <img src="/images/MetroLogoLightDark.png" data-light-src="/images/MetroLogoLightDark.png" data-dark-src="/images/MetroLogoLightDark.png" alt="Metro" class="theme-aware-image w-32 h-28 object-contain">
             </div>
-
-            <!-- Voile Chic -->
-            <div class="p-3 rounded-xl bg-body border border-gray-200/20 group h-fit">
-                <img 
-                    src="/images/VoileChic-noBG.jpg" 
-                    data-light-src="/images/VoileChic.jpg"
-                    data-dark-src="/images/VoileChic-noBG-dark.png"
-                    alt="Voile Chic" 
-                    class="theme-aware-image w-24 sm:w-32 md:w-52 h-[calc(7rem)] sm:h-[calc(9rem)] md:h-[calc(15rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
+            
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
+                <img src="/images/VoileChic-noBG.png" data-light-src="/images/VoileChic.jpg" data-dark-src="/images/VoileChic-noBG-dark.png" alt="Voile Chic" class="theme-aware-image w-32 h-28 object-contain">
             </div>
-
-         
-
-            <!-- Social Snowball -->
-            <div class="p-3 rounded-xl bg-body border border-gray-200/20 group h-fit">
+            
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
+                <img src="/images/SocialSnowball-noBG.png" data-light-src="/images/SocialSnowball-noBG.png" data-dark-src="/images/SocialSnowball-noBG.png" alt="Social Snowball" class="theme-aware-image w-32 h-28 object-contain">
+            </div>
+            
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
+                <img src="/images/EvesCycle.png" data-light-src="/images/EvesCycle.png" data-dark-src="/images/EvesCycle.png" alt="Eve's Cycle" class="theme-aware-image w-32 h-28 object-contain">
+            </div>
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
                 <img 
-                    src="/images/SocialSnowball-noBG.png" 
-                    data-light-src="/images/SocialSnowball-noBG.png"
-                    data-dark-src="/images/SocialSnowball-noBG.png"
-                    alt="Social Snowball" 
-                    class="theme-aware-image w-24 sm:w-32 md:w-52 h-[calc(7rem)] sm:h-[calc(9rem)] md:h-[calc(15rem)] object-contain ease-linear duration-300 grayscale group-hover:!grayscale-0 group-hover:scale-105">
+                    src="/images/ShopifyLightTheme.png" 
+                    data-light-src="/images/ShopifyLightTheme.png" 
+                    data-dark-src="/images/ShopifyDarkTheme.png" 
+                    alt="Shopify Theme" 
+                    class="theme-aware-image w-32 h-32 object-contain dark:w-60 dark:h-60"
+                >
+            </div>
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
+                <img 
+                    src="/images/AffiliatlyLogo.png" 
+                    data-light-src="/images/AffiliatlyLogo.png" 
+                    data-dark-src="/images/AffiliatlyLogo.png" 
+                    alt="Affiliatly Logo" 
+                    class="theme-aware-image w-48 h-48 object-contain"
+                >
+            </div>
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
+                <img 
+                    src="/images/GoAffproLightTheme.png" 
+                    data-light-src="/images/GoAffproLightTheme.png" 
+                    data-dark-src="/images/GoAffproDarkTheme.png" 
+                    alt="GoAffpro Theme" 
+                    class="theme-aware-image w-32 h-28 object-contain"
+                >
+            </div>
+            <div class="p-2 rounded-lg bg-body border border-gray-200/30 dark:border-gray-700/20 h-[calc(7rem)] sm:h-28 w-40 flex items-center justify-center">
+                <img 
+                    src="/images/RefunnelLightTheme.png" 
+                    data-light-src="/images/RefunnelLightTheme.png" 
+                    data-dark-src="/images/RefunnelDarkTheme.png" 
+                    alt="Refunnel Theme" 
+                    class="theme-aware-image w-32 h-28 object-contain dark:w-40 dark:h-36"
+                >
             </div>
         </div>
     </Container>
 </section>
+
+
 
 <script>
     // Fonction pour mettre à jour toutes les images en fonction du thème

@@ -5,15 +5,15 @@ interface Props {
 
 const { className = "" } = Astro.props;
 ---
-<div class:list={["logo-container pt-8", className]}>
+<div class:list={["logo-container pt-8 min-w-[200px]", className]}>
     <img 
         src="/images/Black Logo No Background.png" 
         alt="Livano Logo" 
-        class="h-48 dark:hidden"
+        class="h-48 w-auto object-contain dark:hidden"
     />
     <img 
         src="/images/White Logo No Background.png" 
         alt="Livano Logo" 
-        class="h-48 hidden dark:block"
+        class="h-48 w-auto object-contain hidden dark:block"
     />
 </div>
