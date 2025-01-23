@@ -1,158 +1,91 @@
----
-import Footer from "../components/elements/Footer.astro";
-import Navbar from "../components/elements/Navbar.astro";
-
+--- import Footer from "../components/elements/Footer.astro"; import Navbar from "../components/elements/Navbar.astro";
 interface Props {
-  title: string;
+title: string;
 }
 
-const { title } = Astro.props;
----
+const { title } = Astro.props; --- <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width" /> <link rel="icon" type="image/png" href="/images/Black Logo No Background.png" media="(prefers-color-scheme: light)" /> <link rel="icon" type="image/png" href="/images/White Logo No Background.png" media="(prefers-color-scheme: dark)" /> <meta name="generator" content={Astro.generator} /> <meta name="description" content="Influencers & Affiliates Marketing Agency"> <title>Livano Agency - Affiliate marketing</title> <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" /> </head> <body class="overflow-hidden overflow-y-auto bg-body"> <Navbar /> <main class="relative z-10 pt-0"> <slot /> <Footer /> </main> </body> <script> const switchTheme = document.querySelector( "[data-switch-theme]" ) as HTMLButtonElement;
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" href="/images/Black Logo No Background.png" media="(prefers-color-scheme: light)" />
-    <link rel="icon" type="image/png" href="/images/White Logo No Background.png" media="(prefers-color-scheme: dark)" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content="Influencers & Affiliates Marketing Agency">
-    <title>Livano Agency - Affiliate marketing</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="overflow-hidden overflow-y-auto bg-body">
-    <Navbar />
-    <main class="relative z-10 pt-20">
-      <slot />
-      <Footer />
-    </main>
-  </body>
-  <script>
-    const switchTheme = document.querySelector(
-      "[data-switch-theme]"
-    ) as HTMLButtonElement;
-
-    if (
-      localStorage.getItem("appTheme") === "dark" ||
-      (!("appTheme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    if (switchTheme) {
-      switchTheme.addEventListener("click", (e) => {
-        e.preventDefault();
-        const doc = document.documentElement;
-        if (doc) {
-          if (localStorage.getItem("appTheme")) {
-            if (localStorage.getItem("appTheme") === "light") {
-              doc.classList.add("dark");
-              localStorage.setItem("appTheme", "dark");
-            } else {
-              document.documentElement.classList.remove("dark");
-              localStorage.setItem("appTheme", "light");
-            }
-          } else {
-            if (doc.classList.contains("dark")) {
-              doc.classList.remove("dark");
-              localStorage.setItem("appTheme", "light");
-            } else {
-              doc.classList.add("dark");
-              localStorage.setItem("appTheme", "dark");
-            }
-          }
-        }
-      });
-    }
-  </script>
-  <script>
-    const toggleMenu = document.querySelector(
-      "[data-toggle-nav]"
-    ) as HTMLButtonElement;
-    const navbar = document.querySelector("[data-navbar]") as HTMLDivElement;
-    const overlayNav = document.querySelector(
-      "[data-nav-overlay]"
-    ) as HTMLDivElement;
-    if (toggleMenu) {
-      toggleMenu.addEventListener("click", e => {
-        e.preventDefault();
-        if (toggleMenu.getAttribute("data-open-nav") === "false") {
-          toggleMenu.setAttribute("data-open-nav", "true");
-          overlayNav.setAttribute("data-is-visible", "true");
-          document.body.classList.add("!overflow-y-hidden");
-          navbar.style.height = `${navbar.scrollHeight}px`
+if (
+  localStorage.getItem("appTheme") === "dark" ||
+  (!("appTheme" in localStorage) &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches)
+) {
+  document.documentElement.classList.add("dark");
+} else {
+  document.documentElement.classList.remove("dark");
+}
+if (switchTheme) {
+  switchTheme.addEventListener("click", (e) => {
+    e.preventDefault();
+    const doc = document.documentElement;
+    if (doc) {
+      if (localStorage.getItem("appTheme")) {
+        if (localStorage.getItem("appTheme") === "light") {
+          doc.classList.add("dark");
+          localStorage.setItem("appTheme", "dark");
         } else {
-          toggleMenu.setAttribute("data-open-nav", "false");
-          overlayNav.setAttribute("data-is-visible", "false");
-          document.body.classList.remove("!overflow-y-hidden");
-          navbar.style.height = "0px"
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("appTheme", "light");
         }
-      });
-
-      navbar.addEventListener("click", () => {
-        toggleMenu.setAttribute("data-open-nav", "false");
-        overlayNav.setAttribute("data-is-visible", "false");
-        document.body.classList.remove("!overflow-y-hidden");
-        navbar.style.height = "0px"
-      });
-
-      overlayNav.addEventListener("click", () => {
-        toggleMenu.setAttribute("data-open-nav", "false");
-        overlayNav.setAttribute("data-is-visible", "false");
-        document.body.classList.remove("!overflow-y-hidden");
-        navbar.style.height = "0px"
-      });
+      } else {
+        if (doc.classList.contains("dark")) {
+          doc.classList.remove("dark");
+          localStorage.setItem("appTheme", "light");
+        } else {
+          doc.classList.add("dark");
+          localStorage.setItem("appTheme", "dark");
+        }
+      }
     }
-  </script>
-</html>
-<style is:global>
-  :root {
-    --color-bg: 255 255 255;
-    --color-border: 255 255 255;
-    --color-box: 255 255 255;
-    --box-border: 229 231 235;
-    --box-sd: 226 232 240 / 0.5;
-    --heading-1:  23 37 84;
-    --heading-2: 31 41 55;
-    --heading-3: 55 65 81;
-  }
+  });
+}
+</script> <script> const toggleMenu = document.querySelector( "[data-toggle-nav]" ) as HTMLButtonElement; const navbar = document.querySelector("[data-navbar]") as HTMLDivElement; const overlayNav = document.querySelector( "[data-nav-overlay]" ) as HTMLDivElement; if (toggleMenu) { toggleMenu.addEventListener("click", e => { e.preventDefault(); if (toggleMenu.getAttribute("data-open-nav") === "false") { toggleMenu.setAttribute("data-open-nav", "true"); overlayNav.setAttribute("data-is-visible", "true"); document.body.classList.add("!overflow-y-hidden"); navbar.style.height = `${navbar.scrollHeight}px` } else { toggleMenu.setAttribute("data-open-nav", "false"); overlayNav.setAttribute("data-is-visible", "false"); document.body.classList.remove("!overflow-y-hidden"); navbar.style.height = "0px" } });
 
-  .dark {
-    --color-bg: 3 7 18;
-    --color-box: 17 24 39;
-    --box-border: 243 244 246/0.1;
-    --box-sd: transparent;
-    --heading-1:  255 255 255;
-    --heading-2:  243 244 246;
-    --heading-3:  209 213 219;
-  }
+  navbar.addEventListener("click", () => {
+    toggleMenu.setAttribute("data-open-nav", "false");
+    overlayNav.setAttribute("data-is-visible", "false");
+    document.body.classList.remove("!overflow-y-hidden");
+    navbar.style.height = "0px"
+  });
 
-  html{
-    scroll-behavior: smooth;
-  }
-  body {
-    font-family: "Raleway", sans-serif;
-  }
+  overlayNav.addEventListener("click", () => {
+    toggleMenu.setAttribute("data-open-nav", "false");
+    overlayNav.setAttribute("data-is-visible", "false");
+    document.body.classList.remove("!overflow-y-hidden");
+    navbar.style.height = "0px"
+  });
+}
+</script> </html> <style is:global> :root { --color-bg: 255 255 255; --color-border: 255 255 255; --color-box: 255 255 255; --box-border: 229 231 235; --box-sd: 226 232 240 / 0.5; --heading-1: 23 37 84; --heading-2: 31 41 55; --heading-3: 55 65 81; }
+.dark {
+--color-bg: 3 7 18;
+--color-box: 17 24 39;
+--box-border: 243 244 246/0.1;
+--box-sd: transparent;
+--heading-1:  255 255 255;
+--heading-2:  243 244 246;
+--heading-3:  209 213 219;
+}
 
-  [data-toggle-nav][data-open-nav="true"] #line1 {
-    transform: translateY(0.375rem) rotate(40deg);
-  }
-  [data-toggle-nav][data-open-nav="true"] #line2 {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-  [data-toggle-nav][data-open-nav="true"] #line3 {
-    transform: translateY(-0.375rem) rotate(-40deg);
-  }
+html{
+scroll-behavior: smooth;
+}
+body {
+font-family: "Raleway", sans-serif;
+}
 
-  [data-nav-overlay][data-is-visible="true"] {
-    visibility: visible;
-    display: flex;
-  }
+[data-toggle-nav][data-open-nav="true"] #line1 {
+transform: translateY(0.375rem) rotate(40deg);
+}
+[data-toggle-nav][data-open-nav="true"] #line2 {
+transform: scaleX(0);
+opacity: 0;
+}
+[data-toggle-nav][data-open-nav="true"] #line3 {
+transform: translateY(-0.375rem) rotate(-40deg);
+}
+
+[data-nav-overlay][data-is-visible="true"] {
+visibility: visible;
+display: flex;
+}
 </style>
