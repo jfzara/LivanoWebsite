@@ -6,25 +6,28 @@ import Title from "../shared/Title.astro";
 
 <section id="features">
     <Container className="flex flex-col midmd:flex-row gap-10 lg:gap-12">
-        
-        <div class="flex-1 flex midmd:w-7/12 lg:w-1/2 flex-col">
+        <div class="flex-1 flex midmd:w-7/12 lg:w-1/2 flex-col text-center midmd:text-left">
             <Title>
                 Building Communities That Champion Your Brand 
             </Title>
             <Paragraph className="mt-8">
                 Onboarding is the easy part 
-                <br> 
+                <br class="hidden midmd:block"> 
                 —we specialize in creating vibrant, engaged communities that live and breathe your brand.
             </Paragraph>
           
-            <ul class="mt-8 space-y-4 text-heading-3 font-medium">
-                <li>
-                    <span class="font-bold bg-box-bg rounded-full w-8 h-8 mr-3 text-primary inline-flex justify-center items-center">&checkmark;</span>  Loyalty-building strategies
-                <li>
-                    <span class="font-bold bg-box-bg rounded-full w-8 h-8 mr-3 text-primary inline-flex justify-center items-center">&checkmark;</span> Data-driven targeting for maximum ROI
+            <ul class="mt-8 space-y-4 text-heading-3 font-medium mx-auto midmd:mx-0">
+                <li class="flex items-center justify-center midmd:justify-start">
+                    <span class="font-bold bg-box-bg rounded-full w-8 h-8 mr-3 text-primary inline-flex justify-center items-center">&checkmark;</span>
+                    <span>Loyalty-building strategies</span>
                 </li>
-                <li>
-                    <span class="font-bold bg-box-bg rounded-full w-8 h-8 mr-3 text-primary inline-flex justify-center items-center">&checkmark;</span> Authentic user-generated content strategies
+                <li class="flex items-center justify-center midmd:justify-start">
+                    <span class="font-bold bg-box-bg rounded-full w-8 h-8 mr-3 text-primary inline-flex justify-center items-center">&checkmark;</span>
+                    <span>Data-driven targeting for maximum ROI</span>
+                </li>
+                <li class="flex items-center justify-center midmd:justify-start">
+                    <span class="font-bold bg-box-bg rounded-full w-8 h-8 mr-3 text-primary inline-flex justify-center items-center">&checkmark;</span>
+                    <span>Authentic user-generated content strategies</span>
                 </li>
             </ul>
         </div>
