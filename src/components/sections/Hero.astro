@@ -51,6 +51,7 @@ const videos = [
                             class={`phone-video ${index === 0 ? 'active' : ''}`}
                             muted 
                             playsinline
+                            preload="auto"
                             data-index={index}
                         >
                             <source src={video} type="video/mp4" />
@@ -68,46 +69,57 @@ const videos = [
         const videos = document.querySelectorAll<HTMLVideoElement>('.phone-video');
         let currentIndex = 0;
         const duration = 2500;
+        let isTransitioning = false;
 
         // Précharger toutes les vidéos
-        videos.forEach(video => {
-            video.load();
+        const preloadPromises = Array.from(videos).map(video => {
+            return new Promise((resolve) => {
+                video.load();
+                video.addEventListener('loadeddata', () => resolve(true), { once: true });
+            });
         });
 
-        function playNextVideo() {
+        // Attendre que toutes les vidéos soient chargées avant de commencer
+        Promise.all(preloadPromises).then(() => {
+            if (videos.length > 0) {
+                const firstVideo = videos[0] as HTMLVideoElement;
+                firstVideo.classList.add('active');
+                firstVideo.play().catch(error => {
+                    console.error('Error playing first video:', error);
+                });
+                setTimeout(playNextVideo, duration);
+            }
+        });
+
+        async function playNextVideo() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
             const currentVideo = videos[currentIndex];
             const nextIndex = (currentIndex + 1) % videos.length;
             const nextVideo = videos[nextIndex] as HTMLVideoElement;
 
-            // Préparer la prochaine vidéo
-            nextVideo.currentTime = 0;
-            
-            // Commencer à jouer la prochaine vidéo avant la transition
-            nextVideo.play().catch(error => {
-                console.error('Error playing video:', error);
-            });
+            try {
+                // Préparer la prochaine vidéo
+                nextVideo.currentTime = 0;
+                await nextVideo.play();
 
-            // Attendre un peu que la vidéo commence
-            setTimeout(() => {
+                // Effectuer la transition
                 currentVideo.classList.add('previous');
                 currentVideo.classList.remove('active');
                 nextVideo.classList.remove('previous');
                 nextVideo.classList.add('active');
                 
                 currentIndex = nextIndex;
-            }, 50);
+                isTransitioning = false;
 
-            setTimeout(playNextVideo, duration);
-        }
-
-        // Démarrer avec la première vidéo
-        if (videos.length > 0) {
-            const firstVideo = videos[0] as HTMLVideoElement;
-            firstVideo.classList.add('active');
-            firstVideo.play().catch(error => {
-                console.error('Error playing first video:', error);
-            });
-            setTimeout(playNextVideo, duration);
+                // Planifier la prochaine transition
+                setTimeout(playNextVideo, duration);
+            } catch (error) {
+                console.error('Error during video transition:', error);
+                isTransitioning = false;
+                setTimeout(playNextVideo, 100); // Réessayer rapidement en cas d'erreur
+            }
         }
     }
 
