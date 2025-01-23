@@ -5,13 +5,13 @@ import Title from "../../components/shared/Title.astro";
 <section class="py-4">
     <Container className="space-y-6">
         <div class="text-center flex items-center justify-center gap-4">
-            <div class="h-[1px] w-24 bg-heading-2"></div>
+            <div class="h-[1px] w-[4.5rem] sm:w-[8rem] md:w-[10rem] lg:w-[12rem] bg-heading-2"></div>
             <Title>Trusted by</Title>
-            <div class="h-[1px] w-24 bg-heading-2"></div>
+            <div class="h-[1px] w-[4.5rem] sm:w-[8rem] md:w-[10rem] lg:w-[12rem] bg-heading-2"></div>
         </div>
-        <div class="flex justify-center w-full overflow-hidden">
-            <div class="w-full md:w-[80vw] flex justify-between items-center gap-2">
-                <div class="p-2 rounded-lg bg-body h-12 sm:h-16 md:h-20 w-[16vw] md:w-[calc(80vw/5-2.5rem)] flex items-center justify-center min-w-[60px]">
+        <div class="flex justify-center w-full">
+            <div class="w-full lg:w-[80vw] flex justify-between items-center gap-4">
+                <div class="p-2 h-12 sm:h-16 md:h-20 w-[16vw] lg:w-[14vw] flex items-center justify-center min-w-[60px]">
                     <img 
                         src="/images/ShopifyLightTheme.png" 
                         data-light-src="/images/ShopifyLightTheme.png" 
@@ -21,7 +21,7 @@ import Title from "../../components/shared/Title.astro";
                     >
                 </div>
                 
-                <div class="p-2 rounded-lg bg-body h-12 sm:h-16 md:h-20 w-[16vw] md:w-[calc(80vw/5-2.5rem)] flex items-center justify-center min-w-[60px]">
+                <div class="p-2 h-12 sm:h-16 md:h-20 w-[16vw] lg:w-[14vw] flex items-center justify-center min-w-[60px]">
                     <img 
                         src="/images/VoileChic-noBG.png" 
                         data-light-src="/images/VoileChic.jpg" 
@@ -31,7 +31,7 @@ import Title from "../../components/shared/Title.astro";
                     >
                 </div>
                 
-                <div class="p-2 rounded-lg bg-body h-12 sm:h-16 md:h-20 w-[16vw] md:w-[calc(80vw/5-2.5rem)] flex items-center justify-center min-w-[60px]">
+                <div class="p-2 h-12 sm:h-16 md:h-20 w-[16vw] lg:w-[14vw] flex items-center justify-center min-w-[60px]">
                     <img 
                         src="/images/SocialSnowball-noBG.png" 
                         data-light-src="/images/SocialSnowball-noBG.png" 
@@ -41,7 +41,7 @@ import Title from "../../components/shared/Title.astro";
                     >
                 </div>
                 
-                <div class="p-2 rounded-lg bg-body h-12 sm:h-16 md:h-20 w-[16vw] md:w-[calc(80vw/5-2.5rem)] flex items-center justify-center min-w-[60px]">
+                <div class="p-2 h-12 sm:h-16 md:h-20 w-[16vw] lg:w-[14vw] flex items-center justify-center min-w-[60px]">
                     <img 
                         src="/images/EvesCycle.png" 
                         data-light-src="/images/EvesCycle.png" 
@@ -51,7 +51,7 @@ import Title from "../../components/shared/Title.astro";
                     >
                 </div>
                 
-                <div class="p-2 rounded-lg bg-body h-12 sm:h-16 md:h-20 w-[16vw] md:w-[calc(80vw/5-2.5rem)] flex items-center justify-center min-w-[60px]">
+                <div class="p-2 h-12 sm:h-16 md:h-20 w-[16vw] lg:w-[14vw] flex items-center justify-center min-w-[60px]">
                     <img 
                         src="/images/RefunnelLightTheme.png" 
                         data-light-src="/images/RefunnelLightTheme.png" 
@@ -65,7 +65,6 @@ import Title from "../../components/shared/Title.astro";
     </Container>
 </section>
 <script>
-    // Fonction pour mettre à jour toutes les images en fonction du thème
     function updateThemeAwareImages() {
         const isDark = document.documentElement.classList.contains('dark');
         const themeAwareImages = document.querySelectorAll('.theme-aware-image');
@@ -81,7 +80,6 @@ import Title from "../../components/shared/Title.astro";
         });
     }
 
-    // Observer les changements de thème
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.attributeName === 'class') {
@@ -90,12 +88,10 @@ import Title from "../../components/shared/Title.astro";
         });
     });
 
-    // Démarrer l'observation
     observer.observe(document.documentElement, {
         attributes: true,
         attributeFilter: ['class']
     });
 
-    // Mettre à jour les images au chargement initial
     updateThemeAwareImages();
 </script>
