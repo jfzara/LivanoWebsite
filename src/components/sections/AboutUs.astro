@@ -7,14 +7,14 @@ import Title from "../shared/Title.astro";
 
 <section id="about-us">
     <Container className="flex flex-col midmd:flex-row gap-10 lg:gap-12">
-        <div class=" -mt-7 max-w-2xl mx-auto midmd:max-w-none lg:mx-0 lg:pr-10 xl:pr-2 flex-1 flex w-11/12 midmd:w-6/12 lg:w-1/2 midmd:h-auto order-last midmd:order-first">
-            <div class="w-full relative aspect-[3/4]"> <!-- Changer aspect ratio pour plus de hauteur -->
+        <div class="-mt-24 midmd:mt-0 relative z-0 max-w-2xl mx-auto midmd:max-w-none lg:mx-0 lg:pr-10 xl:pr-2 flex-1 flex w-11/12 midmd:w-6/12 lg:w-1/2 midmd:h-auto order-last midmd:order-first">
+            <div class="w-full relative aspect-[3/4] mb-[-6rem] midmd:mb-0">
                 <img src="/images/AffiliatesCropped.png" alt="banner image" 
                 width="1240" height="1385"
                 class="w-full h-full object-contain" />
             </div>
         </div>
-        <div class="flex-1 flex midmd:w-6/12 lg:w-1/2 flex-col items-center midmd:items-start text-center midmd:text-left">
+        <div class="flex-1 flex midmd:w-6/12 lg:w-1/2 flex-col items-center midmd:items-start text-center midmd:text-left relative z-10">
             <Title className="mx-auto midmd:mx-0">
                 Turn Influence into Unstoppable Growth 
             </Title>
@@ -24,7 +24,7 @@ import Title from "../shared/Title.astro";
                  we create a UGC machine that scales 
                  your business and amplifies brand awareness. 
             </Paragraph>
-            <div class="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl md:max-w-[none] w-full">
+            <div class="pt-4 midmd:pt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl md:max-w-[none] w-full">
                 <div class="h-full flex ">
                     <Info description="Transform influencers into passionate advocates who authentically connect with your audience." title="Influencers" className="w-full h-full flex flex-col text-center midmd:text-left">
                         <span slot="icon">
