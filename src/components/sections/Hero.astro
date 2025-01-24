@@ -25,7 +25,7 @@ const videos = [
             
             <h1 class="text-3xl/tight sm:text-4xl/tight md:text-5xl/tight xl:text-6xl/tight
              font-bold text-heading-1">
-             We Transform Influencers    <span class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-600 from-20% via-primary via-30% to-green-600">into Revenue Machines </span>  to Scale Your Brand
+             We Transform Influencers    <span class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-600 from-20% via-primary via-30% to-green-600">into Revenue Machines </span>  to Scale Your Brand.
             </h1>
             <Paragraph className="mt-8">
                 We drive exponential revenue growth for your brand through influencer affiliate marketing and social referrals.
@@ -52,6 +52,7 @@ const videos = [
                             muted 
                             playsinline
                             preload="auto"
+                            loop={index !== 3}
                             data-index={index}
                         >
                             <source src={video} type="video/mp4" />
@@ -63,68 +64,6 @@ const videos = [
         </div>
     </Container>
 </section>
-
-<script>
-    function setupVideoCarousel() {
-        const videos = document.querySelectorAll<HTMLVideoElement>('.phone-video');
-        let currentIndex = 0;
-        const duration = 2500;
-        let isTransitioning = false;
-
-        // Précharger toutes les vidéos
-        const preloadPromises = Array.from(videos).map(video => {
-            return new Promise((resolve) => {
-                video.load();
-                video.addEventListener('loadeddata', () => resolve(true), { once: true });
-            });
-        });
-
-        // Attendre que toutes les vidéos soient chargées avant de commencer
-        Promise.all(preloadPromises).then(() => {
-            if (videos.length > 0) {
-                const firstVideo = videos[0] as HTMLVideoElement;
-                firstVideo.classList.add('active');
-                firstVideo.play().catch(error => {
-                    console.error('Error playing first video:', error);
-                });
-                setTimeout(playNextVideo, duration);
-            }
-        });
-
-        async function playNextVideo() {
-            if (isTransitioning) return;
-            isTransitioning = true;
-
-            const currentVideo = videos[currentIndex];
-            const nextIndex = (currentIndex + 1) % videos.length;
-            const nextVideo = videos[nextIndex] as HTMLVideoElement;
-
-            try {
-                // Préparer la prochaine vidéo
-                nextVideo.currentTime = 0;
-                await nextVideo.play();
-
-                // Effectuer la transition
-                currentVideo.classList.add('previous');
-                currentVideo.classList.remove('active');
-                nextVideo.classList.remove('previous');
-                nextVideo.classList.add('active');
-                
-                currentIndex = nextIndex;
-                isTransitioning = false;
-
-                // Planifier la prochaine transition
-                setTimeout(playNextVideo, duration);
-            } catch (error) {
-                console.error('Error during video transition:', error);
-                isTransitioning = false;
-                setTimeout(playNextVideo, 100); // Réessayer rapidement en cas d'erreur
-            }
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', setupVideoCarousel);
-</script>
 
 <style>
     .phone-frame {
@@ -170,9 +109,10 @@ const videos = [
         height: 100%;
         object-fit: cover;
         opacity: 0;
-        transform: translateY(-100%);
-        transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-                    opacity 0.3s ease-out;
+        transform: translateY(100%);
+        transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1),
+                   opacity 0.3s ease-out;
+        pointer-events: none;
         will-change: transform, opacity;
     }
 
@@ -182,10 +122,9 @@ const videos = [
     }
 
     .phone-video.previous {
-        transform: translateY(100%);
-        opacity: 0;
-        transition: transform 0.6s cubic-bezier(0.32, 0, 0.67, 0),
-                    opacity 0.3s ease-out;
+        transform: translateY(-100%);
+        opacity: 1;
+        transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1);
     }
 
     @media (min-width: 1024px) {
@@ -203,3 +142,83 @@ const videos = [
         --phone-frame-color: #12223b6e;
     }
 </style>
+
+<script>
+    function setupVideoCarousel() {
+        const videos = document.querySelectorAll<HTMLVideoElement>('.phone-video');
+        let currentIndex = 0;
+        const duration = 3000; // Réduit à 3 secondes
+        let isTransitioning = false;
+
+        // Précharger toutes les vidéos et les mettre en position initiale
+        videos.forEach((video, index) => {
+            if (index === 0) {
+                video.classList.add('active');
+            } else {
+                video.classList.remove('active', 'previous');
+                video.style.transform = 'translateY(100%)';
+                video.style.opacity = '0';
+            }
+            
+            video.load();
+            video.currentTime = 0;
+        });
+
+        // Démarrer la première vidéo
+        if (videos.length > 0) {
+            const firstVideo = videos[0] as HTMLVideoElement;
+            firstVideo.play().catch(console.error);
+            setTimeout(playNextVideo, duration);
+        }
+
+        async function playNextVideo() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            const currentVideo = videos[currentIndex];
+            const nextIndex = (currentIndex + 1) % videos.length;
+            const nextVideo = videos[nextIndex] as HTMLVideoElement;
+
+            try {
+                // Réinitialiser et préparer la prochaine vidéo
+                nextVideo.style.transform = 'translateY(100%)';
+                nextVideo.style.opacity = '0';
+                nextVideo.classList.remove('previous');
+                nextVideo.currentTime = 0;
+                
+                void nextVideo.offsetHeight;
+                
+                const playPromise = nextVideo.play();
+                if (playPromise) {
+                    await playPromise;
+                }
+
+                requestAnimationFrame(() => {
+                    currentVideo.classList.add('previous');
+                    currentVideo.classList.remove('active');
+                    nextVideo.classList.add('active');
+                    nextVideo.style.transform = '';
+                    nextVideo.style.opacity = '';
+                });
+
+                currentIndex = nextIndex;
+
+                setTimeout(() => {
+                    isTransitioning = false;
+                    currentVideo.classList.remove('previous');
+                    currentVideo.style.transform = 'translateY(100%)';
+                    currentVideo.style.opacity = '0';
+                    
+                    setTimeout(playNextVideo, duration);
+                }, 1000); // Synchronisé avec la nouvelle durée de transition
+
+            } catch (error) {
+                console.error('Error during video transition:', error);
+                isTransitioning = false;
+                setTimeout(playNextVideo, 100);
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', setupVideoCarousel);
+</script>
