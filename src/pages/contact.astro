@@ -6,14 +6,11 @@ import CalendlyWidget from '../components/sections/CalendlyWidget.astro';
 import Button from '../components/shared/Button.astro';
 import { Resend } from 'resend';
 
-// Initialiser Resend
 const resend = new Resend(import.meta.env.PUBLIC_RESEND_API_KEY);
 
-// Variables pour les messages
 let errorMessage = '';
 let successMessage = '';
 
-// Gérer la soumission du formulaire
 if (Astro.request.method === 'POST') {
     try {
         const data = await Astro.request.formData();
@@ -25,7 +22,7 @@ if (Astro.request.method === 'POST') {
 
         const { data: emailResponse, error } = await resend.emails.send({
             from: 'onboarding@resend.dev',
-            to: 'zarajeanfabrice@gmail.com',
+            to: 'livano@livanoagency.com',
             subject: `Nouveau contact de ${name} - ${company}`,
             html: `
                 <h2>Nouveau message de contact</h2>
@@ -61,7 +58,6 @@ if (Astro.request.method === 'POST') {
                     </Title>
                     
                     <form class="mt-8 relative" method="post" lang="en">
-                        {/* Message d'erreur */}
                         {errorMessage && (
                             <div class="absolute -top-8 left-0 right-0 flex justify-center" role="alert">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-red-50 dark:bg-red-500/5 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/10">
@@ -73,7 +69,6 @@ if (Astro.request.method === 'POST') {
                             </div>
                         )}
 
-                        {/* Message de succès */}
                         {successMessage && (
                             <div class="absolute -top-8 left-0 right-0 flex justify-center" role="alert">
                                 <div class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs success-container">
@@ -85,8 +80,7 @@ if (Astro.request.method === 'POST') {
                             </div>
                         )}
 
-                        {/* Formulaire */}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex flex-col space-y-6">
                             <div class="form-group">
                                 <input 
                                     type="text" 
@@ -138,7 +132,7 @@ if (Astro.request.method === 'POST') {
                                 />
                             </div>
 
-                            <div class="form-group col-span-2">
+                            <div class="form-group">
                                 <label class="block text-sm font-medium text-heading-2 dark:text-heading-2 mb-2">Message</label>
                                 <textarea 
                                     name="message" 
@@ -153,7 +147,6 @@ if (Astro.request.method === 'POST') {
                             </div>
                         </div>
 
-                        {/* Bouton d'envoi */}
                         <div class="mt-6 flex justify-center">
                             <Button variant="primary" type="submit">
                                 <span class="text-white relative z-[5]">Submit</span>
@@ -161,7 +154,6 @@ if (Astro.request.method === 'POST') {
                         </div>
                     </form>
 
-                    {/* Contact Email */}
                     <div class="mt-8 text-center">
                         <a href="mailto:livano@livanoagency.com" class="text-primary hover:text-primary-dark">
                             livano@livanoagency.com
@@ -169,12 +161,12 @@ if (Astro.request.method === 'POST') {
                     </div>
                 </div>
 
-                {/* Calendly Widget */}
                 <CalendlyWidget />
             </div>
         </Container>
     </main>
 </Layout>
+
 <style>
     @keyframes success-flash {
         0%, 100% {
@@ -231,4 +223,4 @@ if (Astro.request.method === 'POST') {
         --success-icon: rgb(147, 197, 253);
         --success-icon-flash: rgba(147, 197, 253, 0.8);
     }
-</style>
+</style>git add <div class=""></div>
