@@ -12,7 +12,23 @@ import Container from "../shared/Container.astro";
                 Book a time that works best for you to discuss how we can help grow your business.
             </p>
         </div>
-        <div class="calendly-inline-widget mb-0" data-url="https://calendly.com/livano-livanoagency/30min" style="min-width:320px;height:1000px;"></div>
+        <div class="overflow-hidden">
+            <div class="calendly-inline-widget mb-0 h-[850px] sm:h-[890px] md:h-[895px] lg:h-[900px]" data-url="https://calendly.com/livano-livanoagency/30min" style="position: relative;-webkit-overflow-scrolling:touch;min-width:320px;">
+            </div>
+        </div>
         <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
     </Container>
 </section>
+
+<style>
+    @media (min-width: 640px) and (max-width: 1023px) {
+        :global(.calendly-badge-widget) {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            position: absolute !important;
+            z-index: -1 !important;
+        }
+    }
+</style>
