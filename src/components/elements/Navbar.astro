@@ -4,19 +4,23 @@ import Container from "../shared/Container.astro";
 import Navitem from "../shared/Navitem.astro";
 import Logo from "../shared/Logo.astro";
 
-// Détecter si on est sur la page de contact
+// Détecter si on est sur la page de contact ou blog
 const isContactPage = Astro.url.pathname === '/contact';
+const isBlogPage = Astro.url.pathname === '/blog';
 
 const navItems = [
     {
-        href: isContactPage ? "/" : "#",
+        href: isContactPage || isBlogPage ? "/" : "#",
         text: "Home"
     },
     {
-        href: isContactPage ? "/#services" : "#services",
+        href: isContactPage || isBlogPage ? "/#services" : "#services",
         text: "Services"
     },
-   
+    {
+        href: "/blog",
+        text: "Blogs"
+    },
     {
         href: "/contact",
         text: "Contact"
