@@ -157,7 +157,7 @@ const videos = [
                 video.style.transform = 'translateY(0)';
                 video.style.opacity = '1';
             } else {
-                video.style.transform = 'translateY(100%)';
+                video.style.transform = 'translateY(100%)'; // La prochaine vidéo attend en bas
                 video.style.opacity = '1';
             }
             
@@ -185,7 +185,7 @@ const videos = [
 
             try {
                 // Préparer la prochaine vidéo
-                nextVideo.style.transform = 'translateY(100%)';
+                nextVideo.style.transform = 'translateY(100%)'; // La nouvelle vidéo commence en bas
                 nextVideo.currentTime = 0;
                 
                 // Démarrer la lecture de la prochaine vidéo
@@ -195,11 +195,11 @@ const videos = [
                 requestAnimationFrame(() => {
                     // La vidéo courante monte
                     currentVideo.style.transition = 'transform 1s cubic-bezier(0.33, 1, 0.68, 1)';
-                    currentVideo.style.transform = 'translateY(-100%)';
+                    currentVideo.style.transform = 'translateY(-100%)'; // La vidéo actuelle monte vers le haut
 
                     // La nouvelle vidéo monte
                     nextVideo.style.transition = 'transform 1s cubic-bezier(0.33, 1, 0.68, 1)';
-                    nextVideo.style.transform = 'translateY(0)';
+                    nextVideo.style.transform = 'translateY(0)'; // La nouvelle vidéo monte au centre
                 });
 
                 // Mettre à jour l'index
@@ -210,7 +210,7 @@ const videos = [
                     isTransitioning = false;
                     // Replacer l'ancienne vidéo en bas
                     currentVideo.style.transition = 'none';
-                    currentVideo.style.transform = 'translateY(100%)';
+                    currentVideo.style.transform = 'translateY(100%)'; // Replacer en bas pour la prochaine fois
                     
                     // Programmer la prochaine transition
                     setTimeout(playNextVideo, VIDEO_DURATION);
