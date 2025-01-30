@@ -148,7 +148,8 @@ const videos = [
         const videos = document.querySelectorAll<HTMLVideoElement>('.phone-video');
         let currentIndex = 0;
         let isTransitioning = false;
-        const VIDEO_DURATION = 2000; // 2 secondes en millisecondes
+        const VIDEO_DURATION = 2000;
+        const TRANSITION_OFFSET = 50; // Déclencher la transition 50ms avant la fin
 
         // Initialisation des vidéos
         videos.forEach((video, index) => {
@@ -157,16 +158,25 @@ const videos = [
                 video.style.transform = 'translateY(0)';
                 video.style.opacity = '1';
             } else {
-                video.style.transform = 'translateY(100%)'; // La prochaine vidéo attend en bas
+                video.style.transform = 'translateY(100%)';
                 video.style.opacity = '1';
             }
             
-            // Préchargement des vidéos
             video.load();
             video.currentTime = 0;
-            
-            // Forcer la lecture en boucle pour éviter les pauses
-            video.loop = true;
+            video.loop = index !== 3;
+
+            // Pour la dernière vidéo, on ajoute un événement pour détecter quand elle approche de sa fin
+            if (index === 3) {
+                video.addEventListener('timeupdate', () => {
+                    if (!isTransitioning && currentIndex === 3) {
+                        const timeLeft = video.duration - video.currentTime;
+                        if (timeLeft < 0.1) { // Si il reste moins de 100ms
+                            playNextVideo();
+                        }
+                    }
+                });
+            }
         });
 
         // Démarrer la première vidéo et le timer
@@ -184,43 +194,39 @@ const videos = [
             const nextVideo = videos[nextIndex];
 
             try {
-                // Préparer la prochaine vidéo
-                nextVideo.style.transform = 'translateY(100%)'; // La nouvelle vidéo commence en bas
+                nextVideo.style.transform = 'translateY(100%)';
                 nextVideo.currentTime = 0;
                 
-                // Démarrer la lecture de la prochaine vidéo
                 await nextVideo.play();
 
-                // Animer la transition
                 requestAnimationFrame(() => {
-                    // La vidéo courante monte
                     currentVideo.style.transition = 'transform 1s cubic-bezier(0.33, 1, 0.68, 1)';
-                    currentVideo.style.transform = 'translateY(-100%)'; // La vidéo actuelle monte vers le haut
+                    currentVideo.style.transform = 'translateY(-100%)';
 
-                    // La nouvelle vidéo monte
                     nextVideo.style.transition = 'transform 1s cubic-bezier(0.33, 1, 0.68, 1)';
-                    nextVideo.style.transform = 'translateY(0)'; // La nouvelle vidéo monte au centre
+                    nextVideo.style.transform = 'translateY(0)';
                 });
 
-                // Mettre à jour l'index
                 currentIndex = nextIndex;
 
-                // Réinitialiser après la transition
                 setTimeout(() => {
                     isTransitioning = false;
-                    // Replacer l'ancienne vidéo en bas
                     currentVideo.style.transition = 'none';
-                    currentVideo.style.transform = 'translateY(100%)'; // Replacer en bas pour la prochaine fois
+                    currentVideo.style.transform = 'translateY(100%)';
                     
-                    // Programmer la prochaine transition
-                    setTimeout(playNextVideo, VIDEO_DURATION);
+                    // Pour toutes les vidéos sauf la dernière, on utilise VIDEO_DURATION
+                    if (nextIndex !== 3) {
+                        setTimeout(playNextVideo, VIDEO_DURATION);
+                    }
+                    // Pour la dernière vidéo, la transition sera déclenchée par l'événement timeupdate
                 }, 1000);
 
             } catch (error) {
-                console.error('Error during video transition:', error);
+                console.error('Erreur pendant la transition vidéo:', error);
                 isTransitioning = false;
-                // En cas d'erreur, on essaie de continuer
-                setTimeout(playNextVideo, VIDEO_DURATION);
+                if (nextIndex !== 3) {
+                    setTimeout(playNextVideo, VIDEO_DURATION);
+                }
             }
         }
     }
