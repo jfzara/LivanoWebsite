@@ -1,0 +1,62 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Container from '../../components/shared/Container.astro';
+
+const articleData = {
+  title: "10 Strategies to Scale Your Affiliate Program",
+  category: "Affiliate Programs",
+  date: "Jan 15, 2025",
+  readTime: "8 min",
+  image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070"
+};
+---
+
+<Layout title={articleData.title}>
+  <article class="py-16 bg-gray-50 dark:bg-gray-900">
+    <Container>
+      <div class="max-w-3xl mx-auto">
+        <div class="mb-8">
+          <img 
+            src={articleData.image} 
+            alt={articleData.title}
+            class="w-full h-[400px] object-cover rounded-xl"
+          />
+        </div>
+        
+        <div class="prose prose-lg dark:prose-invert max-w-none">
+          <div class="mb-8">
+            <h1 class="text-4xl font-bold mb-4">{articleData.title}</h1>
+            <div class="flex items-center gap-4 text-gray-600 dark:text-gray-400">
+              <span>{articleData.date}</span>
+              <span>•</span>
+              <span>{articleData.readTime}</span>
+              <span>•</span>
+              <span>{articleData.category}</span>
+            </div>
+          </div>
+          
+          <h2>Introduction</h2>
+          <p>Dans le paysage numérique d'aujourd'hui, un programme d'affiliation bien exécuté peut considérablement stimuler la croissance de votre entreprise. Voici dix stratégies éprouvées pour développer efficacement votre programme d'affiliation.</p>
+
+          <h2>1. Proposition de valeur claire</h2>
+          <p>Votre programme d'affiliation doit offrir des avantages convaincants qui attirent des partenaires de qualité :</p>
+          <ul>
+            <li>Taux de commission compétitifs</li>
+            <li>Durée de cookie étendue</li>
+            <li>Promotions exclusives</li>
+            <li>Bonus de performance</li>
+          </ul>
+
+          <h2>2. Processus d'intégration simplifié</h2>
+          <p>Facilitez l'adhésion et le démarrage des affiliés :</p>
+          <ul>
+            <li>Processus de candidature simple</li>
+            <li>Directives et attentes claires</li>
+            <li>Matériel marketing prêt à l'emploi</li>
+            <li>Équipe de support réactive</li>
+          </ul>
+        </div>
+      </div>
+    </Container>
+  </article>
+</Layout>

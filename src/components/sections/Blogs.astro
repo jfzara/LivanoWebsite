@@ -12,141 +12,37 @@ const categories = [
     "Analytics"
 ];
 
-// Initial posts that are shown
-const initialPosts = [
+const posts = [
     {
         title: "10 Strategies to Scale Your Affiliate Program",
         category: "Affiliate Programs",
         excerpt: "Learn the proven methods to grow your affiliate program and increase revenue through strategic partnerships.",
         image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070",
-        date: "Mar 15, 2024",
+        date: "Jan 15, 2025",
         readTime: "8 min"
-    },
-    {
-        title: "How to Find and Partner with the Right Influencers",
-        category: "Influencer Marketing",
-        excerpt: "Discover the key factors to consider when selecting influencers and building lasting partnerships.",
-        image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2074",
-        date: "Mar 12, 2024",
-        readTime: "6 min"
-    },
-    {
-        title: "Case Study: How We 10x'd Our Client's ROI",
-        category: "Case Studies",
-        excerpt: "A detailed analysis of how we helped a fashion brand scale their affiliate program.",
-        image: "https://images.unsplash.com/photo-1590402494587-44b71d7772f6?q=80&w=2070",
-        date: "Mar 10, 2024",
-        readTime: "12 min"
     }
 ];
-
-// First batch of additional posts
-const additionalPosts = [
-    {
-        title: "The Future of Social Commerce",
-        category: "Growth Strategies",
-        excerpt: "Exploring emerging trends in social commerce and how brands can leverage them.",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015",
-        date: "Mar 8, 2024",
-        readTime: "10 min"
-    },
-    {
-        title: "Building a Successful Affiliate Network",
-        category: "Affiliate Programs",
-        excerpt: "Step-by-step guide to creating and managing a thriving affiliate network.",
-        image: "https://images.unsplash.com/photo-1552581234-26160f608093?q=80&w=2070",
-        date: "Mar 5, 2024",
-        readTime: "15 min"
-    },
-    {
-        title: "Maximizing TikTok for Brand Growth",
-        category: "Influencer Marketing",
-        excerpt: "How to leverage TikTok's explosive growth for your brand's success.",
-        image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?q=80&w=2074",
-        date: "Mar 3, 2024",
-        readTime: "9 min"
-    }
-];
-
-// Second batch of additional posts
-const morePosts = [
-    {
-        title: "Data-Driven Influencer Selection",
-        category: "Analytics",
-        excerpt: "Using analytics to identify and partner with the most effective influencers for your brand.",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070",
-        date: "Mar 1, 2024",
-        readTime: "11 min"
-    },
-    {
-        title: "Instagram Shopping Features for Affiliates",
-        category: "Social Media",
-        excerpt: "Maximizing sales through Instagram's latest shopping features and affiliate tools.",
-        image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2074",
-        date: "Feb 28, 2024",
-        readTime: "7 min"
-    },
-    {
-        title: "Affiliate Marketing Analytics Guide",
-        category: "Analytics",
-        excerpt: "Essential metrics and KPIs to track for successful affiliate program management.",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070",
-        date: "Feb 25, 2024",
-        readTime: "13 min"
-    },
-    {
-        title: "Pinterest Strategy for Affiliates",
-        category: "Social Media",
-        excerpt: "Leveraging Pinterest's visual platform to drive affiliate sales and engagement.",
-        image: "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?q=80&w=2074",
-        date: "Feb 22, 2024",
-        readTime: "8 min"
-    },
-    {
-        title: "Scaling Through Micro-Influencers",
-        category: "Growth Strategies",
-        excerpt: "How to build and manage a network of micro-influencers for maximum impact.",
-        image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2074",
-        date: "Feb 20, 2024",
-        readTime: "10 min"
-    },
-    {
-        title: "Case Study: Beauty Brand Success",
-        category: "Case Studies",
-        excerpt: "How we helped a beauty brand achieve 300% ROI through influencer partnerships.",
-        image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080",
-        date: "Feb 18, 2024",
-        readTime: "14 min"
-    }
-];
-
-// Pass all posts data to the client-side script
-const allPostsData = {
-    initial: initialPosts,
-    additional: additionalPosts,
-    more: morePosts
-};
 ---
 
-<section class="py-16 bg-gray-50 dark:bg-gray-900">
+<section class="py-16 bg-body">
     <Container>
         <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-heading-1 mb-4">Latest Insights</h1>
+            <h1 class="text-4xl font-bold text-heading-1 mb-4">Latest Articles</h1>
             <p class="text-heading-3 max-w-2xl mx-auto">
                 Discover the latest trends, strategies, and success stories in influencer marketing and affiliate programs.
             </p>
         </div>
 
-        <!-- Search input -->
+        <!-- Search bar -->
         <div class="max-w-md mx-auto mb-8">
             <div class="relative">
                 <input 
                     type="text" 
                     id="search-input"
                     placeholder="Search articles..."
-                    class="w-full px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-heading-2 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    class="w-full px-4 py-2 rounded-full border border-box-border bg-box-bg text-heading-2 focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-4 top-1/2 transform -translate-y-1/2 text-heading-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
@@ -158,7 +54,7 @@ const allPostsData = {
                     class={`px-4 py-2 rounded-full border transition-all duration-300 text-sm
                     ${index === 0 
                         ? 'bg-primary text-white border-primary hover:bg-primary/90' 
-                        : 'border-gray-200 dark:border-gray-700 text-heading-2 hover:border-gray-300 dark:hover:border-gray-600'}`}
+                        : 'border-box-border text-heading-2 hover:border-heading-3'}`}
                     data-category={category}
                 >
                     {category}
@@ -167,7 +63,7 @@ const allPostsData = {
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="posts-container">
-            {initialPosts.map((post) => (
+            {posts.map((post) => (
                 <BlogCard {...post} />
             ))}
         </div>
@@ -181,7 +77,7 @@ const allPostsData = {
             </button>
             <button 
                 id="show-less"
-                class="px-6 py-3 rounded-full bg-gray-200 dark:bg-gray-700 text-heading-2 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300 hidden"
+                class="px-6 py-3 rounded-full bg-box-bg text-heading-2 hover:bg-box-border transition-colors duration-300 hidden"
             >
                 Show Less
             </button>
@@ -189,177 +85,73 @@ const allPostsData = {
     </Container>
 </section>
 
-<script define:vars={{ allPostsData }}>
-    // Filter functionality
+<script>
     const filterButtons = document.querySelectorAll('[data-category]');
-    const searchInput = document.getElementById('search-input');
-    const articles = document.querySelectorAll('article');
-    let currentPosts = [...allPostsData.initial];
-    let loadState = 0; // 0: initial, 1: first batch, 2: all posts
-    
-    // Search functionality
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const allPosts = document.querySelectorAll('article');
-        
-        allPosts.forEach((article) => {
-            const title = article.querySelector('h3')?.textContent?.toLowerCase() || '';
-            const excerpt = article.querySelector('p')?.textContent?.toLowerCase() || '';
-            const category = article.querySelector('span')?.textContent?.toLowerCase() || '';
-            
-            if (title.includes(searchTerm) || excerpt.includes(searchTerm) || category.includes(searchTerm)) {
-                article.style.display = 'block';
-                article.style.opacity = '1';
-                article.style.transform = 'scale(1)';
-            } else {
-                article.style.display = 'none';
-                article.style.opacity = '0';
-                article.style.transform = 'scale(0.95)';
-            }
-        });
-    });
-
-    filterButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-            // Reset search input
-            searchInput.value = '';
-            
-            // Remove active class from all buttons
-            filterButtons.forEach((btn) => {
-                btn.classList.remove('bg-primary', 'text-white', 'border-primary');
-                btn.classList.add('border-gray-200', 'dark:border-gray-700', 'text-heading-2');
-            });
-
-            // Add active class to clicked button
-            button.classList.remove('border-gray-200', 'dark:border-gray-700', 'text-heading-2');
-            button.classList.add('bg-primary', 'text-white', 'border-primary');
-
-            const category = button.getAttribute('data-category');
-            filterPosts(category);
-        });
-    });
-
-    function filterPosts(category) {
-        const allPosts = document.querySelectorAll('article');
-        allPosts.forEach((article) => {
-            const categoryElement = article.querySelector('[class*="bg-primary"]');
-            if (!categoryElement) return;
-            
-            const articleCategory = categoryElement.textContent?.trim();
-            
-            if (category === 'All' || category === articleCategory) {
-                article.style.display = 'block';
-                article.style.opacity = '1';
-                article.style.transform = 'scale(1)';
-            } else {
-                article.style.display = 'none';
-                article.style.opacity = '0';
-                article.style.transform = 'scale(0.95)';
-            }
-        });
-    }
-
-    // Load More and Show Less functionality
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
     const loadMoreButton = document.getElementById('load-more');
     const showLessButton = document.getElementById('show-less');
-    const postsContainer = document.getElementById('posts-container');
-
-    loadMoreButton.addEventListener('click', () => {
-        if (loadState === 0) {
-            // Load first batch
-            allPostsData.additional.forEach(post => {
-                const articleHTML = createArticleHTML(post);
-                postsContainer.insertAdjacentHTML('beforeend', articleHTML);
+    
+    if (searchInput && loadMoreButton && showLessButton) {
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const target = e.target as HTMLInputElement;
+            const searchTerm = target.value.toLowerCase();
+            const articles = document.querySelectorAll('article');
+            
+            articles.forEach((article) => {
+                const title = article.querySelector('h3')?.textContent?.toLowerCase() || '';
+                const excerpt = article.querySelector('p')?.textContent?.toLowerCase() || '';
+                const category = article.querySelector('span')?.textContent?.toLowerCase() || '';
+                
+                if (title.includes(searchTerm) || excerpt.includes(searchTerm) || category.includes(searchTerm)) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
             });
-            loadState = 1;
+        });
+
+        // Category filtering functionality
+        filterButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                searchInput.value = '';
+                
+                filterButtons.forEach((btn) => {
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('border-box-border', 'text-heading-2');
+                });
+
+                button.classList.remove('border-box-border', 'text-heading-2');
+                button.classList.add('bg-primary', 'text-white', 'border-primary');
+
+                const category = button.getAttribute('data-category');
+                const articles = document.querySelectorAll('article');
+                
+                articles.forEach((article) => {
+                    const articleCategory = article.querySelector('[class*="bg-primary"]')?.textContent?.trim();
+                    if (category === 'All' || category === articleCategory) {
+                        article.style.display = 'block';
+                    } else {
+                        article.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Load More/Show Less functionality
+        loadMoreButton.addEventListener('click', () => {
             showLessButton.classList.remove('hidden');
-        } else if (loadState === 1) {
-            // Load second batch
-            allPostsData.more.forEach(post => {
-                const articleHTML = createArticleHTML(post);
-                postsContainer.insertAdjacentHTML('beforeend', articleHTML);
-            });
-            loadState = 2;
             loadMoreButton.style.display = 'none';
-        }
-        
-        // Re-apply current filter if any
-        const activeCategory = document.querySelector('[data-category].bg-primary')?.getAttribute('data-category');
-        if (activeCategory) {
-            filterPosts(activeCategory);
-        }
+        });
 
-        // Re-apply search if any
-        if (searchInput.value) {
-            const event = new Event('input');
-            searchInput.dispatchEvent(event);
-        }
-    });
-
-    showLessButton.addEventListener('click', () => {
-        const allPosts = document.querySelectorAll('article');
-        // Remove all posts except initial ones
-        allPosts.forEach((post, index) => {
-            if (index >= allPostsData.initial.length) {
-                post.remove();
+        showLessButton.addEventListener('click', () => {
+            loadMoreButton.style.display = 'inline-block';
+            showLessButton.classList.add('hidden');
+            
+            const blogSection = document.querySelector('section');
+            if (blogSection) {
+                blogSection.scrollIntoView({ behavior: 'smooth' });
             }
         });
-        
-        loadState = 0;
-        loadMoreButton.style.display = 'inline-block';
-        showLessButton.classList.add('hidden');
-        
-        // Scroll to top of the blog section
-        const blogSection = document.querySelector('section');
-        blogSection.scrollIntoView({ behavior: 'smooth' });
-    });
-
-    function createArticleHTML(post) {
-        return `
-            <article class="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
-                <div class="relative w-full h-[150px] overflow-hidden">
-                    <img 
-                        src="${post.image}" 
-                        alt="${post.title}" 
-                        class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-120" 
-                        loading="lazy"
-                        style="transform-origin: center center;"
-                    />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <span class="absolute top-4 left-4 bg-primary text-white text-xs px-3 py-1.5 rounded-full font-medium">
-                        ${post.category}
-                    </span>
-                </div>
-                <div class="p-5">
-                    <h3 class="text-lg font-semibold text-heading-1 mb-3 line-clamp-2">
-                        <a href="/blog/${post.title.toLowerCase().replace(/\s+/g, '-')}" 
-                           class="hover:text-primary transition-colors duration-300">
-                            ${post.title}
-                        </a>
-                    </h3>
-                    <p class="text-heading-3 text-sm mb-4 line-clamp-2">
-                        ${post.excerpt}
-                    </p>
-                    <div class="flex items-center justify-between text-sm text-heading-3">
-                        <span class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                            ${post.date}
-                        </span>
-                        <span class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                            ${post.readTime} read
-                        </span>
-                    </div>
-                </div>
-            </article>
-        `;
     }
 </script>
