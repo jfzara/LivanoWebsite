@@ -3,17 +3,49 @@ import Button from "../shared/Button.astro";
 import Container from "../shared/Container.astro";
 import Paragraph from "../shared/Paragraph.astro";
 
-const videos = [
-    "/videos/video1.mp4",
-    "/videos/video2.mp4",
-    "/videos/video3.mp4",
-    "/videos/video4.mp4"
+interface Video {
+    webm: string;
+    mp4: string;
+    poster: string;
+    width: number;
+    height: number;
+}
+
+const firstFrameImage = "/images/video1-first-frame.webp";
+const videos: Video[] = [
+    {
+        webm: "/videos/video1.webm",
+        mp4: "/videos/video1.mp4",
+        poster: firstFrameImage,
+        width: 380,
+        height: 760
+    },
+    {
+        webm: "/videos/video2.webm",
+        mp4: "/videos/video2.mp4",
+        poster: firstFrameImage,
+        width: 380,
+        height: 760
+    },
+    {
+        webm: "/videos/video3.webm",
+        mp4: "/videos/video3.mp4",
+        poster: firstFrameImage,
+        width: 380,
+        height: 760
+    },
+    {
+        webm: "/videos/video4.webm",
+        mp4: "/videos/video4.mp4",
+        poster: firstFrameImage,
+        width: 380,
+        height: 760
+    }
 ];
 ---
 
 <section id="hero" class="relative pt-1 lg:pt-36">
-    <!-- Gradient shapes outside of Container -->
-    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <span class="w-4/12 lg:w-2/12 aspect-square bg-gradient-to-tr from-primary to-green-400 absolute -top-5 lg:left-0 rounded-full skew-y-12 blur-2xl opacity-40 skew-x-12 rotate-90"></span>
         <span class="absolute -left-6 md:left-4 top-24 lg:top-28 w-24 h-24 rotate-90 skew-x-12 rounded-3xl bg-green-400 blur-xl opacity-60 lg:opacity-95 lg:block hidden"></span>
         <span class="absolute right-4 bottom-12 w-24 h-24 rounded-3xl bg-primary blur-xl opacity-80"></span>
@@ -23,10 +55,14 @@ const videos = [
         <div class="relative flex flex-col items-center text-center lg:text-left lg:py-7 xl:py-8 
         lg:items-start lg:max-w-none max-w-3xl mx-auto lg:mx-0 lg:flex-1 lg:w-1/2">
             
-            <h1 class="text-3xl/tight sm:text-4xl/tight md:text-5xl/tight xl:text-6xl/tight
-             font-bold text-heading-1">
-             We Transform Influencers    <span class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-600 from-20% via-primary via-30% to-green-600">into Revenue Machines </span>  to Scale Your Brand
+            <h1 class="hero-title">
+                <span class="hero-text">We Transform</span>
+                <span class="hero-text">Influencers</span>
+                <span class="gradient-text">into Revenue</span>
+                <span class="gradient-text">Machines</span>
+                <span class="hero-text">to Scale Your Brand</span>
             </h1>
+            
             <Paragraph className="mt-8">
                 We drive exponential revenue growth for your brand through influencer affiliate marketing and social referrals.
             </Paragraph>
@@ -45,17 +81,28 @@ const videos = [
 
         <div class="flex flex-1 lg:w-1/2 lg:h-auto relative lg:max-w-none lg:mx-0 mx-auto max-w-3xl">
             <div class="phone-frame">
-                <div class="video-container">
+                <div class="placeholder-image" aria-hidden="true"></div>
+                <div class="video-container" data-loading="true">
                     {videos.map((video, index) => (
                         <video 
                             class={`phone-video ${index === 0 ? 'active' : ''}`}
                             muted 
                             playsinline
-                            preload="auto"
-                            loop={false}
+                            preload={index === 0 ? "auto" : "none"}
                             data-index={index}
+                            poster={video.poster}
+                            width={video.width}
+                            height={video.height}
+                            aria-label={`Promotional video ${index + 1}`}
                         >
-                            <source src={video} type="video/mp4" />
+                            <source 
+                                src={video.webm} 
+                                type="video/webm"
+                            />
+                            <source 
+                                src={video.mp4} 
+                                type="video/mp4"
+                            />
                             Your browser does not support videos.
                         </video>
                     ))}
@@ -77,6 +124,20 @@ const videos = [
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         border: 8px solid var(--phone-frame-color);
         overflow: hidden;
+        contain: content;
+    }
+
+    .placeholder-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #f3f4f6 25%, #e5e7eb 25%, #e5e7eb 50%, #f3f4f6 50%, #f3f4f6 75%, #e5e7eb 75%, #e5e7eb);
+        background-size: 20px 20px;
+        opacity: 0.5;
+        border-radius: 30px;
+        z-index: 1;
     }
 
     .phone-frame::before {
@@ -99,32 +160,30 @@ const videos = [
         height: 100%;
         border-radius: 30px;
         overflow: hidden;
+        contain: content;
     }
 
     .phone-video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        transform: translateY(100%);
-        transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1),
-                   opacity 0.3s ease-out;
-        pointer-events: none;
-        will-change: transform, opacity;
-    }
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s ease-in-out;
+    will-change: transform, opacity;
+}
 
-    .phone-video.active {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
+.phone-video.active {
+    opacity: 1;
+    transform: translateY(0);
+}
     .phone-video.previous {
         transform: translateY(-100%);
         opacity: 1;
-        transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1);
     }
 
     @media (min-width: 1024px) {
@@ -134,102 +193,189 @@ const videos = [
         }
     }
 
+    .hero-title {
+        font-size: clamp(2rem, 5vw, 3.75rem);
+        line-height: 1.1;
+        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        contain: content;
+        will-change: transform;
+    }
+
+    @media (min-width: 1024px) {
+        .hero-title {
+            align-items: flex-start;
+            text-align: left;
+        }
+    }
+
+    .hero-text {
+        display: block;
+        transform: translateZ(0);
+        color: var(--text-heading);
+    }
+
+    .gradient-text {
+        display: block;
+        background-image: linear-gradient(90deg, #4f46e5 0%, #06b6d4 50%, #22c55e 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transform: translateZ(0);
+        will-change: transform;
+        background-size: 200% 100%;
+        animation: gradient-shift 8s ease infinite;
+    }
+
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .gradient-text {
+            animation: none;
+            background-size: 100% 100%;
+            background-position: 0 0;
+        }
+    }
+
     :root {
-        --phone-frame-color: rgba(241, 245, 249, 0.8); 
+        --text-heading: #1a1a1a;
+        --phone-frame-color: rgba(241, 245, 249, 0.8);
     }
 
     :root.dark {
+        --text-heading: #ffffff;
         --phone-frame-color: #12223b6e;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    .placeholder-image {
+        animation: shimmer 2s infinite linear;
     }
 </style>
 
 <script>
-    function setupVideoCarousel() {
-        const videos = document.querySelectorAll<HTMLVideoElement>('.phone-video');
-        let currentIndex = 0;
-        let isTransitioning = false;
-        const VIDEO_DURATION = 2000;
-        const TRANSITION_OFFSET = 50; // Déclencher la transition 50ms avant la fin
-
-        // Initialisation des vidéos
-        videos.forEach((video, index) => {
-            if (index === 0) {
-                video.classList.add('active');
-                video.style.transform = 'translateY(0)';
-                video.style.opacity = '1';
-            } else {
-                video.style.transform = 'translateY(100%)';
-                video.style.opacity = '1';
-            }
+    class VideoPlayer {
+        private videos: HTMLVideoElement[];
+        private currentIndex: number;
+        private isTransitioning: boolean;
+        private readonly VIDEO_DURATION = 3000; // Augmenté pour une meilleure visibilité
+    
+        constructor() {
+            this.videos = Array.from(document.querySelectorAll('.phone-video'));
+            this.currentIndex = 0;
+            this.isTransitioning = false;
+            this.init();
+        }
+    
+        private init(): void {
+            if (this.videos.length === 0) return;
+    
+            this.setupVideos();
+            this.preloadNextVideo(0);
             
+            // Commencer la séquence après un court délai
+            setTimeout(() => this.startVideoSequence(), 500);
+        }
+    
+        private setupVideos(): void {
+            this.videos.forEach((video, index) => {
+                video.loop = true; // Activer la lecture en boucle
+                if (index === 0) {
+                    video.classList.add('active');
+                    this.setupFirstVideo(video);
+                } else {
+                    this.setupOtherVideo(video);
+                }
+            });
+        }
+    
+        private setupFirstVideo(video: HTMLVideoElement): void {
+            video.style.transform = 'translateY(0)';
+            video.style.opacity = '1';
+            video.load();
+            video.play().catch(console.error);
+    
+            const placeholder = document.querySelector('.placeholder-image');
+            if (placeholder) {
+                video.addEventListener('loadeddata', () => {
+                    placeholder.remove();
+                });
+            }
+        }
+    
+        private setupOtherVideo(video: HTMLVideoElement): void {
+            video.style.transform = 'translateY(100%)';
+            video.style.opacity = '0';
             video.load();
             video.currentTime = 0;
-            video.loop = index !== 3;
-
-            // Pour la dernière vidéo, on ajoute un événement pour détecter quand elle approche de sa fin
-            if (index === 3) {
-                video.addEventListener('timeupdate', () => {
-                    if (!isTransitioning && currentIndex === 3) {
-                        const timeLeft = video.duration - video.currentTime;
-                        if (timeLeft < 0.1) { // Si il reste moins de 100ms
-                            playNextVideo();
-                        }
-                    }
-                });
-            }
-        });
-
-        // Démarrer la première vidéo et le timer
-        if (videos.length > 0) {
-            videos[0].play().catch(console.error);
-            setTimeout(playNextVideo, VIDEO_DURATION);
         }
-
-        async function playNextVideo() {
-            if (isTransitioning) return;
-            isTransitioning = true;
-
-            const currentVideo = videos[currentIndex];
-            const nextIndex = (currentIndex + 1) % videos.length;
-            const nextVideo = videos[nextIndex];
-
-            try {
-                nextVideo.style.transform = 'translateY(100%)';
-                nextVideo.currentTime = 0;
-                
-                await nextVideo.play();
-
-                requestAnimationFrame(() => {
-                    currentVideo.style.transition = 'transform 1s cubic-bezier(0.33, 1, 0.68, 1)';
-                    currentVideo.style.transform = 'translateY(-100%)';
-
-                    nextVideo.style.transition = 'transform 1s cubic-bezier(0.33, 1, 0.68, 1)';
-                    nextVideo.style.transform = 'translateY(0)';
-                });
-
-                currentIndex = nextIndex;
-
-                setTimeout(() => {
-                    isTransitioning = false;
-                    currentVideo.style.transition = 'none';
-                    currentVideo.style.transform = 'translateY(100%)';
-                    
-                    // Pour toutes les vidéos sauf la dernière, on utilise VIDEO_DURATION
-                    if (nextIndex !== 3) {
-                        setTimeout(playNextVideo, VIDEO_DURATION);
-                    }
-                    // Pour la dernière vidéo, la transition sera déclenchée par l'événement timeupdate
-                }, 1000);
-
-            } catch (error) {
-                console.error('Erreur pendant la transition vidéo:', error);
-                isTransitioning = false;
-                if (nextIndex !== 3) {
-                    setTimeout(playNextVideo, VIDEO_DURATION);
+    
+        private preloadNextVideo(index: number): void {
+            const nextIndex = (index + 1) % this.videos.length;
+            const nextVideo = this.videos[nextIndex];
+            if (nextVideo && nextVideo.preload === 'none') {
+                nextVideo.preload = 'auto';
+            }
+        }
+    
+        private startVideoSequence(): void {
+            this.playNextVideo();
+            // Planifier la prochaine transition
+            setInterval(() => {
+                if (!this.isTransitioning) {
+                    this.playNextVideo();
                 }
+            }, this.VIDEO_DURATION);
+        }
+    
+        private async playNextVideo(): Promise<void> {
+            if (this.isTransitioning) return;
+            this.isTransitioning = true;
+    
+            const currentVideo = this.videos[this.currentIndex];
+            const nextIndex = (this.currentIndex + 1) % this.videos.length;
+            const nextVideo = this.videos[nextIndex];
+    
+            try {
+                // Préparer la prochaine vidéo
+                nextVideo.style.opacity = '1';
+                await nextVideo.play();
+    
+                // Démarrer la transition
+                currentVideo.style.transform = 'translateY(-100%)';
+                nextVideo.style.transform = 'translateY(0)';
+    
+                // Mettre à jour l'index
+                this.currentIndex = nextIndex;
+    
+                // Réinitialiser après la transition
+                setTimeout(() => {
+                    currentVideo.style.transform = 'translateY(100%)';
+                    this.isTransitioning = false;
+                    this.preloadNextVideo(nextIndex);
+                }, 1000);
+    
+            } catch (error) {
+                console.error('Error during video transition:', error);
+                this.isTransitioning = false;
             }
         }
     }
-
-    document.addEventListener('DOMContentLoaded', setupVideoCarousel);
-</script>
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => new VideoPlayer());
+    } else {
+        new VideoPlayer();
+    }
+    </script>
