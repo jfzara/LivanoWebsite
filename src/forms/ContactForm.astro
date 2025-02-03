@@ -2,7 +2,7 @@
 import Button from '../components/shared/Button.astro';
 import { Resend } from 'resend';
 
-const resend = new Resend(import.meta.env.PUBLIC_RESEND_API_KEY);
+const resend = new Resend(import.meta.env.RESEND_API_KEY);
 let errorMessage = '';
 let successMessage = '';
 
@@ -17,7 +17,7 @@ if (Astro.request.method === 'POST') {
 
         const { data: emailResponse, error } = await resend.emails.send({
             from: 'onboarding@resend.dev',
-            to: 'livano@livanoagency.com',
+            to: 'zarajeanfabrice@gmail.com',
             subject: `Nouveau contact de ${name} - ${company}`,
             html: `
                 <h2>Nouveau message de contact</h2>
@@ -59,8 +59,8 @@ if (Astro.request.method === 'POST') {
         {successMessage && (
             <div class="absolute -top-5 left-0 right-0 flex justify-center" role="alert">
                 <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs success-container">
-                    <span class="success-text">Sent</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 success-checkmark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <span class="text-primary dark:text-blue-400 font-medium">Sent</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-primary dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
@@ -68,6 +68,7 @@ if (Astro.request.method === 'POST') {
         )}
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-2.5 md:gap-3">
+            <!-- Le reste du formulaire reste inchangé -->
             <div class="form-group col-span-1 lg:col-span-2">
                 <input 
                     type="text" 
@@ -151,17 +152,6 @@ if (Astro.request.method === 'POST') {
         }
     }
 
-    @keyframes checkmark-flash {
-        0%, 100% {
-            stroke: var(--success-icon);
-            transform: scale(1);
-        }
-        50% {
-            stroke: var(--success-icon-flash);
-            transform: scale(1.2);
-        }
-    }
-
     .success-container {
         animation: success-flash 0.6s ease-in-out 3;
         border: 1.5px solid;
@@ -169,31 +159,20 @@ if (Astro.request.method === 'POST') {
         border-color: var(--success-border);
     }
 
-    .success-checkmark {
-        animation: checkmark-flash 0.6s ease-in-out 3;
-        stroke: var(--success-icon);
-    }
-
-    .success-text {
-        @apply dark:text-blue-400 text-blue-600;
-    }
-
+    /* Mode clair */
     :root {
-        --success-bg: rgb(255, 255, 255);
-        --success-bg-flash: rgba(59, 130, 246, 0.1);
-        --success-border: rgb(59, 130, 246);
-        --success-border-flash: rgba(59, 130, 246, 0.8);
-        --success-icon: rgb(59, 130, 246);
-        --success-icon-flash: rgba(59, 130, 246, 0.8);
+        --success-bg: rgba(29, 78, 216, 0.1);
+        --success-bg-flash: rgba(29, 78, 216, 0.2);
+        --success-border: rgb(29, 78, 216);
+        --success-border-flash: rgba(29, 78, 216, 0.8);
     }
 
+    /* Mode sombre */
     :root.dark {
-        --success-bg: rgba(59, 130, 246, 0.2);
-        --success-bg-flash: rgba(147, 197, 253, 0.3);
-        --success-border: rgb(147, 197, 253);
-        --success-border-flash: rgba(147, 197, 253, 0.8);
-        --success-icon: rgb(147, 197, 253);
-        --success-icon-flash: rgba(147, 197, 253, 0.8);
+        --success-bg: rgba(96, 165, 250, 0.2);
+        --success-bg-flash: rgba(96, 165, 250, 0.3);
+        --success-border: rgb(96, 165, 250);
+        --success-border-flash: rgba(96, 165, 250, 0.8);
     }
 </style>
 
@@ -230,8 +209,8 @@ if (Astro.request.method === 'POST') {
                     successDiv.setAttribute('role', 'alert');
                     successDiv.innerHTML = `
                         <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs success-container">
-                            <span class="success-text">Sent</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 success-checkmark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <span class="text-primary dark:text-blue-400 font-medium">Sent</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-primary dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
                         </div>
