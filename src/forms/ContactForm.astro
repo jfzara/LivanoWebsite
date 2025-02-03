@@ -17,7 +17,7 @@ if (Astro.request.method === 'POST') {
 
         const { data: emailResponse, error } = await resend.emails.send({
             from: 'onboarding@resend.dev',
-            to: 'zarajeanfabrice@gmail.com',
+            to: 'livano@livanoagency.com',
             subject: `Nouveau contact de ${name} - ${company}`,
             html: `
                 <h2>Nouveau message de contact</h2>
