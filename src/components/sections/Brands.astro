@@ -1,6 +1,6 @@
 ---
-import Container from "../../components/shared/Container.astro";
-import Title from "../../components/shared/Title.astro";
+import Container from "../shared/Container.astro";
+import Title from "../shared/Title.astro";
 ---
 <section class="py-0 -translate-y-1">
     <Container className="space-y-6">
@@ -64,34 +64,7 @@ import Title from "../../components/shared/Title.astro";
         </div>
     </Container>
 </section>
+
 <script>
-    function updateThemeAwareImages() {
-        const isDark = document.documentElement.classList.contains('dark');
-        const themeAwareImages = document.querySelectorAll('.theme-aware-image');
-        
-        themeAwareImages.forEach(image => {
-            const currentSrc = image.getAttribute('src') || '';
-            const lightSrc = image.getAttribute('data-light-src') || '';
-            const darkSrc = image.getAttribute('data-dark-src') || '';
-            
-            if (lightSrc && darkSrc) {
-                image.setAttribute('src', isDark ? darkSrc : lightSrc);
-            }
-        });
-    }
-
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'class') {
-                updateThemeAwareImages();
-            }
-        });
-    });
-
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-    });
-
-    updateThemeAwareImages();
+    import "../../scripts/themeAwareLogos.js";
 </script>

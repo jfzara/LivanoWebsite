@@ -87,76 +87,7 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
     </body>
 </html>
 
-<script>
-    // Regroupement des scripts pour réduire les requêtes
-    const initTheme = () => {
-        const switchTheme = document.querySelector("[data-switch-theme]") as HTMLButtonElement;
-        
-        if (
-            localStorage.getItem("appTheme") === "dark" ||
-            (!("appTheme" in localStorage) &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-        }
-
-        if (switchTheme) {
-            switchTheme.addEventListener("click", (e) => {
-                e.preventDefault();
-                const doc = document.documentElement;
-                if (doc) {
-                    const isDark = doc.classList.contains("dark");
-                    doc.classList.toggle("dark");
-                    localStorage.setItem("appTheme", isDark ? "light" : "dark");
-                }
-            });
-        }
-    };
-
-    const initNav = () => {
-        const toggleMenu = document.querySelector("[data-toggle-nav]") as HTMLButtonElement;
-        const navbar = document.querySelector("[data-navbar]") as HTMLDivElement;
-        const overlayNav = document.querySelector("[data-nav-overlay]") as HTMLDivElement;
-
-        const closeNav = () => {
-            toggleMenu?.setAttribute("data-open-nav", "false");
-            overlayNav?.setAttribute("data-is-visible", "false");
-            document.body.classList.remove("!overflow-y-hidden");
-            navbar.style.height = "0px";
-        };
-
-        if (toggleMenu) {
-            toggleMenu.addEventListener("click", e => {
-                e.preventDefault();
-                const isOpen = toggleMenu.getAttribute("data-open-nav") === "true";
-                toggleMenu.setAttribute("data-open-nav", (!isOpen).toString());
-                overlayNav?.setAttribute("data-is-visible", (!isOpen).toString());
-                document.body.classList.toggle("!overflow-y-hidden", !isOpen);
-                navbar.style.height = isOpen ? "0px" : `${navbar.scrollHeight}px`;
-            });
-
-            navbar?.addEventListener("click", closeNav);
-            overlayNav?.addEventListener("click", closeNav);
-        }
-    };
-
-    // Initialisation différée pour améliorer les performances
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            requestIdleCallback(() => {
-                initTheme();
-                initNav();
-            });
-        });
-    } else {
-        requestIdleCallback(() => {
-            initTheme();
-            initNav();
-        });
-    }
-</script>
+<script src="/scripts/themeNav.ts" defer></script>
 
 <style is:global>
     [data-toggle-nav][data-open-nav="true"] #line1 {
