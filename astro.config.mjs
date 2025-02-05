@@ -6,6 +6,10 @@ export default defineConfig({
   integrations: [tailwind()],
   output: 'server',
   adapter: cloudflare(),
+  compressHTML: true,
+  build: {
+    inlineStylesheets: 'auto'
+  },
   vite: {
     build: {
       cssCodeSplit: true,
@@ -13,25 +17,40 @@ export default defineConfig({
       cssMinify: true,
       rollupOptions: {
         output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              return 'vendor';
-            }
+          manualChunks: {
+            'vendor': [/node_modules/],
+            'hero': ['./src/scripts/heroVideo.ts'],
+            'theme': [
+              './src/scripts/themeNav.ts',
+              './src/scripts/themeAwareLogos.ts'
+            ],
+            'contact': ['./src/scripts/contactForm.ts'],
+            'blog': ['./src/scripts/blogInteractions.js']
           }
+        }
+      },
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn'],
+          passes: 2,
+          ecma: 2020,
+          module: true
+        },
+        mangle: {
+          toplevel: true,
+          module: true
+        },
+        format: {
+          comments: false,
+          ecma: 2020
         }
       }
     },
-    ssr: {
-      noExternal: ['path-to-regexp']
-    },
-    // Optimisation Vite native
     optimizeDeps: {
       exclude: ['node_modules/*'],
       include: ['@astrojs/tailwind']
     }
-  },
-  compressHTML: true,
-  build: {
-    inlineStylesheets: 'auto'
   }
 });

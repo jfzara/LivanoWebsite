@@ -15,19 +15,29 @@ if (Astro.request.method === 'POST') {
         const phone = data.get('phone')?.toString() || '';
         const message = data.get('message')?.toString() || '';
 
+        // Adjust subject line based on whether company is provided
+        const subject = company 
+            ? `[Client Lead] Website Contact - ${company} | ${name}`
+            : `[Client Lead] Website Contact - ${name}`;
+
         const { data: emailResponse, error } = await resend.emails.send({
-            from: 'onboarding@resend.dev',
-            to: 'livano@livanoagency.com',
-            subject: `Nouveau contact de ${name} - ${company}`,
+            from: 'contact@livanoagency.com',
+            to: ['livano@livanoagency.com'],
+            replyTo: email,
+            subject,
             html: `
-                <h2>Nouveau message de contact</h2>
-                <p><strong>Nom:</strong> ${name}</p>
+                <h2>New Contact Message</h2>
+                <p><strong>Name:</strong> ${name}</p>
                 <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Entreprise:</strong> ${company}</p>
-                <p><strong>Téléphone:</strong> ${phone}</p>
+                ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
+                ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
                 <p><strong>Message:</strong></p>
                 <p>${message}</p>
-            `
+            `,
+            tags: [{
+                name: 'source',
+                value: 'contact_form'
+            }]
         });
 
         if (error) {
@@ -68,7 +78,6 @@ if (Astro.request.method === 'POST') {
         )}
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-2.5 md:gap-3">
-            <!-- Le reste du formulaire reste inchangé -->
             <div class="form-group col-span-1 lg:col-span-2">
                 <input 
                     type="text" 
@@ -100,8 +109,7 @@ if (Astro.request.method === 'POST') {
                     name="company" 
                     lang="en"
                     class="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:bg-box-bg dark:border-box-border dark:text-heading-2" 
-                    placeholder="*Company name" 
-                    required
+                    placeholder="Company name (Optional)" 
                 />
             </div>
             <div class="form-group col-span-1 lg:col-span-2">
