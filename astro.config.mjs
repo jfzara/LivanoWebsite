@@ -24,7 +24,7 @@ export default defineConfig({
               './src/scripts/themeNav.ts',
               './src/scripts/themeAwareLogos.ts'
             ],
-            'contact': ['./src/scripts/contactForm.ts'],
+            'contact': ['./src/scripts/contactFormHandler.js'],
             'blog': ['./src/scripts/blogInteractions.js']
           }
         }
