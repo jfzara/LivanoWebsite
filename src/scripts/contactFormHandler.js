@@ -18,7 +18,9 @@ function initContactForm() {
     if (form) {
         form.addEventListener('submit', async function(e) {
             // En développement, on soumet directement le formulaire
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            if (window.location.hostname === 'localhost' || 
+                window.location.hostname === '127.0.0.1' || 
+                window.location.hostname.includes('.pages.dev')) {
                 return;
             }
 
