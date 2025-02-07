@@ -18,7 +18,7 @@ def test_form():
 
     try:
         print("Ouverture de la page...")
-        driver.get("http://localhost:4321")
+        driver.get("http://localhost:4325")
         time.sleep(3)
 
         print("Remplissage du formulaire...")
@@ -43,19 +43,19 @@ def test_form():
                 print(f"❌ Erreur: Impossible de trouver le champ {field_name}")
                 raise
 
-        # Injecter le token de test
-        print("\nInjection du token de test...")
+        # Injecter un faux token reCAPTCHA
+        print("\nInjection du token reCAPTCHA de test...")
         driver.execute_script("""
-            document.getElementById('recaptcha_token').value = 'test_token';
+            document.getElementById('g-recaptcha-response').value = 'test_token';
         """)
 
         # Trouver le bouton de soumission
         print("\nRecherche du bouton de soumission...")
         button_locators = [
+            (By.CSS_SELECTOR, "button[type='submit']"),
             (By.CSS_SELECTOR, "#contactForm button[type='submit']"),
-            (By.CSS_SELECTOR, "#submitButton"),
-            (By.XPATH, "//form[@id='contactForm']//button[@type='submit']"),
             (By.XPATH, "//button[contains(text(), 'Submit')]"),
+            (By.XPATH, "//form[@id='contactForm']//button[@type='submit']")
         ]
 
         submit_button = None
@@ -83,7 +83,7 @@ def test_form():
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", submit_button)
         time.sleep(1)
 
-        # Essayer de cliquer sur le bouton
+        # Essayer de cliquer sur le bouton avec différentes méthodes
         print("\nTentatives de clic sur le bouton...")
         success = False
         click_methods = [
@@ -110,13 +110,21 @@ def test_form():
         # Attendre et vérifier la réponse
         print("\nAttente de la réponse...")
         time.sleep(3)
+        
+        # Vérifier les messages de succès ou d'erreur
         try:
-            message = wait.until(
-                EC.presence_of_element_located((By.CLASS_NAME, "message"))
+            message_succes = wait.until(
+                EC.presence_of_element_located((By.CLASS_NAME, "success-container"))
             )
-            print(f"\n✅ Réponse reçue: {message.text}")
+            print(f"\n✅ Message de succès trouvé : {message_succes.text}")
         except TimeoutException:
-            print("\n❓ Pas de message de réponse trouvé")
+            try:
+                message_erreur = wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "[role='alert'] .text-red-600"))
+                )
+                print(f"\n❌ Message d'erreur trouvé : {message_erreur.text}")
+            except TimeoutException:
+                print("\n❓ Aucun message de réponse trouvé")
 
     except Exception as e:
         print(f"\n❌ Erreur lors du test : {str(e)}")

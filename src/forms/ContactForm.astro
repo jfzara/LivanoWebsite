@@ -6,16 +6,45 @@ const resend = new Resend(import.meta.env.RESEND_API_KEY);
 let errorMessage = '';
 let successMessage = '';
 
+// Determine if we're in development mode
+const isDevelopment = import.meta.env.MODE === 'development';
+
 if (Astro.request.method === 'POST') {
     try {
         const data = await Astro.request.formData();
+        
+        // Vérification du honeypot
+        const honeypot = data.get('website')?.toString();
+        if (honeypot) {
+            throw new Error('Bot detected');
+        }
+        
         const name = data.get('name')?.toString() || '';
         const email = data.get('email')?.toString() || '';
         const company = data.get('company')?.toString() || '';
         const phone = data.get('phone')?.toString() || '';
         const message = data.get('message')?.toString() || '';
+        const recaptchaToken = data.get('g-recaptcha-response')?.toString();
 
-        // Adjust subject line based on whether company is provided
+        // Verify reCAPTCHA token only in production
+        if (!isDevelopment) {
+            if (!recaptchaToken) {
+                throw new Error('reCAPTCHA verification failed');
+            }
+
+            const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `secret=${import.meta.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`
+            });
+
+            const recaptchaResult = await recaptchaResponse.json();
+
+            if (!recaptchaResult.success || recaptchaResult.score < 0.5) {
+                throw new Error('reCAPTCHA verification failed');
+            }
+        }
+
         const subject = company 
             ? `[Client Lead] Website Contact - ${company} | ${name}`
             : `[Client Lead] Website Contact - ${name}`;
@@ -55,6 +84,17 @@ if (Astro.request.method === 'POST') {
 
 <div class="w-[73%] mx-auto">
     <form id="contactForm" class="mt-3 relative" method="post" lang="en">
+        <!-- Champ honeypot -->
+        <div class="hidden" aria-hidden="true" style="display: none;">
+            <input
+                type="text"
+                name="website"
+                tabindex="-1"
+                autocomplete="off"
+                class="hidden"
+            />
+        </div>
+
         {errorMessage && (
             <div class="absolute -top-5 left-0 right-0 flex justify-center" role="alert">
                 <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs bg-red-50 dark:bg-red-500/5 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/10">
@@ -140,6 +180,7 @@ if (Astro.request.method === 'POST') {
                 <div class="text-xs text-gray-500 mt-0.5 text-right message-length"></div>
             </div>
         </div>
+        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
         <div class="mt-3 flex justify-center">
             <Button variant={"primary"} type="submit">
                 <span class="text-white relative z-[5]">Submit</span>
@@ -167,7 +208,7 @@ if (Astro.request.method === 'POST') {
         border-color: var(--success-border);
     }
 
-    /* Mode clair */
+    /* Light mode */
     :root {
         --success-bg: rgba(29, 78, 216, 0.1);
         --success-bg-flash: rgba(29, 78, 216, 0.2);
@@ -175,7 +216,7 @@ if (Astro.request.method === 'POST') {
         --success-border-flash: rgba(29, 78, 216, 0.8);
     }
 
-    /* Mode sombre */
+    /* Dark mode */
     :root.dark {
         --success-bg: rgba(96, 165, 250, 0.2);
         --success-bg-flash: rgba(96, 165, 250, 0.3);
@@ -183,5 +224,22 @@ if (Astro.request.method === 'POST') {
         --success-border-flash: rgba(96, 165, 250, 0.8);
     }
 </style>
+
+<!-- Add reCAPTCHA script only in production -->
+{!isDevelopment && (
+    <>
+        <script is:inline define:vars={{ siteKey: import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY }}>
+            window.grecaptchaCallback = function() {
+                grecaptcha.ready(function() {
+                    grecaptcha.execute(siteKey, {action: 'submit'})
+                    .then(function(token) {
+                        document.getElementById('g-recaptcha-response').value = token;
+                    });
+                });
+            };
+        </script>
+        <script src={`https://www.google.com/recaptcha/api.js?render=${import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}&onload=grecaptchaCallback`} async defer></script>
+    </>
+)}
 
 <script src="/scripts/contactFormHandler.js" defer></script>
