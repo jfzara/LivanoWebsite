@@ -18,10 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     messageTextarea.addEventListener('input', updateMessageLength);
 
     // Gestion de la soumission du formulaire
-    form.addEventListener('submit', async function(e) {
-        // Le formulaire sera géré côté serveur par Astro
-        // Pas besoin de preventDefault() car nous voulons que le formulaire soit soumis normalement
-
+    form.addEventListener('submit', function(e) {
         // Réinitialisation des messages d'erreur personnalisés
         const inputs = form.querySelectorAll('input, textarea');
         inputs.forEach(input => {
@@ -60,28 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Si nous sommes en production, nous attendons que reCAPTCHA soit chargé
-        if (typeof grecaptcha !== 'undefined') {
-            try {
-                await new Promise((resolve) => {
-                    grecaptcha.ready(() => {
-                        grecaptcha.execute(window.recaptchaSiteKey, { action: 'submit' })
-                            .then(token => {
-                                document.getElementById('g-recaptcha-response').value = token;
-                                resolve();
-                            });
-                    });
-                });
-            } catch (error) {
-                console.error('reCAPTCHA error:', error);
-                // Continuez quand même en développement
-                if (window.location.hostname !== 'localhost' && 
-                    window.location.hostname !== '127.0.0.1') {
-                    return;
-                }
-            }
-        }
-
-        // Le formulaire sera soumis normalement
+        // La validation du reCAPTCHA est gérée automatiquement par le formulaire
     });
 });
