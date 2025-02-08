@@ -52,7 +52,7 @@ if (Astro.request.method === 'POST') {
 
         const { data: emailResponse, error } = await resend.emails.send({
             from: 'contact@livanoagency.com',
-            to: ['zarajeanfabrice@gmail.com'],
+            to: ['livano@livanoagency.com'],
             replyTo: email,
             subject,
             html: `
