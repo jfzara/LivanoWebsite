@@ -17,10 +17,6 @@ const navItems = [
         href: isContactPage || isBlogPage ? "/#services" : "#services",
         text: "Services"
     },
-    /*{
-        href: "/blog",
-        text: "Blogs"
-    },*/
     {
         href: "/contact",
         text: "Contact"
@@ -39,7 +35,7 @@ const navItems = [
 
             <div data-nav-overlay aria-hidden="true" class="fixed hidden inset-0 lg:!hidden bg-box-bg bg-opacity-50 backdrop-filter backdrop-blur-xl"></div>
             <div data-navbar class="flex h-0 overflow-hidden lg:!h-auto lg:scale-y-100 duration-300 ease-linear flex-col gap-y-6 gap-x-4 lg:flex-row w-full lg:justify-between lg:items-center absolute lg:relative top-full lg:top-0 bg-body lg:bg-transparent border-x border-x-box-border lg:border-x-0">
-                <ul class="border-t border-box-border lg:border-t-0 px-6 lg:px-0 pt-0 lg:pt-0 flex flex-col lg:flex-row gap-y-4 gap-x-14 text-lg text-heading-2 w-full lg:justify-center lg:items-center">
+                <ul class="border-t border-box-border lg:border-t-0 px-6 lg:px-0 pt-6 lg:pt-0 flex flex-col lg:flex-row gap-y-4 gap-x-14 text-lg text-heading-2 w-full lg:justify-center lg:items-center">
                     {navItems.map(item=>{
                         return <Navitem {...item}/>
                     })
@@ -51,18 +47,16 @@ const navItems = [
                 </div>
             </div>
 
-            <div class="min-w-max flex items-center gap-x-3">
-                <button data-toggle-nav data-open-nav="false" class="lg:hidden lg:invisible outline-none w-7 h-auto flex flex-col relative">
-                    <span id="line1" class="w-6 h-0.5 rounded-full bg-black dark:bg-white transition-all duration-300 ease-linear"></span> 
-                    <span id="line2" class="w-6 origin-center mt-1 h-0.5 rounded-full bg-black dark:bg-white transition-all duration-300 ease-linear"></span> 
-                    <span id="line3" class="w-6 mt-1 h-0.5 rounded-full bg-black dark:bg-white transition-all duration-300 ease-linear"></span>                         
-                    <span class="sr-only">togglenav</span>
-                </button>
-            </div>
+            <button data-toggle-nav data-open-nav="false" class="lg:hidden outline-none w-7 h-auto flex flex-col relative">
+                <span id="line1" class="w-6 h-0.5 rounded-full bg-heading-2 transition-all duration-300 ease-linear"></span> 
+                <span id="line2" class="w-6 origin-center mt-1 h-0.5 rounded-full bg-heading-2 transition-all duration-300 ease-linear"></span> 
+                <span id="line3" class="w-6 mt-1 h-0.5 rounded-full bg-heading-2 transition-all duration-300 ease-linear"></span>                         
+                <span class="sr-only">toggle menu</span>
+            </button>
         </nav>
     </Container>
 </header>
 
 <script>
-    import "../../scripts/theme-switcher.js";
+    import "../../scripts/navigation.js";
 </script>
