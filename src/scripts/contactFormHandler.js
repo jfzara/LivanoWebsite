@@ -8,11 +8,33 @@ document.addEventListener('DOMContentLoaded', function() {
     let shouldReset = false;
     let successTextTimeout = null;
 
+    // AJOUT ICI : Gestion du mode sombre pour Turnstile
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function updateTurnstileTheme() {
+        const turnstileWidget = document.getElementById('turnstile-widget');
+        if (!turnstileWidget) return;
+
+        const isDarkMode = darkModeMediaQuery.matches;
+        turnstileWidget.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+        
+        // Si le widget est déjà rendu, on le recharge avec le nouveau thème
+        if (window.turnstile) {
+            window.turnstile.reset('#turnstile-widget');
+        }
+    }
+
+    // Initialisation du thème
+    updateTurnstileTheme();
+
+    // Écoute des changements de thème
+    darkModeMediaQuery.addEventListener('change', updateTurnstileTheme);
+
     // Configuration du widget Turnstile
     window.onloadTurnstileCallback = function() {
-        turnstileWidget = turnstile.render('.cf-turnstile', {
+        turnstileWidget = turnstile.render('#turnstile-widget', { // Modifié ici pour utiliser l'ID
             sitekey: document.querySelector('.cf-turnstile').dataset.sitekey,
-            theme: 'light',
+            theme: darkModeMediaQuery.matches ? 'dark' : 'light', // Modifié ici
             appearance: 'checkbox',
             'refresh-expired': 'manual',
             'retry-interval': 'never',

@@ -182,10 +182,13 @@ if (Astro.request.method === 'POST') {
             </div>
         </div>
 
-        <!-- Turnstile widget -->
-        <div class="mt-4 flex justify-center">
-            <div class="cf-turnstile" data-sitekey={import.meta.env.TURNSTILE_SITE_KEY}></div>
+       <!-- Turnstile widget -->
+       <div class="mt-4 flex justify-center">
+        <div class="cf-turnstile" 
+             data-sitekey={import.meta.env.TURNSTILE_SITE_KEY}
+             data-theme="auto">
         </div>
+    </div>
 
         <div class="mt-3 flex justify-center">
             <Button variant={"primary"} type="submit">
@@ -196,6 +199,29 @@ if (Astro.request.method === 'POST') {
 </div>
 
 <style>
+    /* Styles de base */
+    :global(:root) {
+        --success-bg: rgba(29, 78, 216, 0.1);
+        --success-bg-flash: rgba(29, 78, 216, 0.2);
+        --success-border: rgb(29, 78, 216);
+        --success-border-flash: rgba(29, 78, 216, 0.8);
+    }
+
+    :global(:root.dark) {
+        --success-bg: rgba(96, 165, 250, 0.2);
+        --success-bg-flash: rgba(96, 165, 250, 0.3);
+        --success-border: rgb(96, 165, 250);
+        --success-border-flash: rgba(96, 165, 250, 0.8);
+    }
+
+    /* Styles pour le widget Turnstile */
+    :global(.cf-turnstile) {
+        margin: 0 auto !important;
+        display: block !important;
+        max-width: fit-content !important;
+    }
+
+    /* Reste des styles */
     @keyframes success-flash {
         0%, 100% {
             background-color: var(--success-bg);
@@ -214,27 +240,57 @@ if (Astro.request.method === 'POST') {
         border-color: var(--success-border);
     }
 
-    /* Light mode */
-    :root {
-        --success-bg: rgba(29, 78, 216, 0.1);
-        --success-bg-flash: rgba(29, 78, 216, 0.2);
-        --success-border: rgb(29, 78, 216);
-        --success-border-flash: rgba(29, 78, 216, 0.8);
-    }
-
-    /* Dark mode */
-    :root.dark {
-        --success-bg: rgba(96, 165, 250, 0.2);
-        --success-bg-flash: rgba(96, 165, 250, 0.3);
-        --success-border: rgb(96, 165, 250);
-        --success-border-flash: rgba(96, 165, 250, 0.8);
+    :global(.dark) input,
+    :global(.dark) textarea {
+        background-color: var(--box-bg);
+        border-color: var(--box-border);
+        color: var(--heading-2);
     }
 </style>
-
 <!-- Add Turnstile script -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
-    // Importez directement le script
     import "../scripts/contactFormHandler.js";
-  </script>
+
+    // Types pour Turnstile
+    interface TurnstileObject {
+        render: (selector: string, options: TurnstileOptions) => string;
+        reset: (widgetId: string) => void;
+    }
+
+    interface TurnstileOptions {
+        sitekey: string;
+        theme?: 'light' | 'dark' | 'auto';
+        callback?: (token: string) => void;
+        'refresh-expired'?: string;
+        'retry-interval'?: string;
+        size?: string;
+        'response-field'?: boolean;
+        'response-field-name'?: string;
+    }
+
+    interface TurnstileElement extends HTMLElement {
+        dataset: {
+            sitekey: string;
+        };
+    }
+
+    declare global {
+        interface Window {
+            turnstile: TurnstileObject;
+            onloadTurnstileCallback: () => void;
+        }
+    }
+
+    // Configuration de Turnstile avec thème automatique
+    window.onloadTurnstileCallback = function() {
+        const turnstileElement = document.querySelector('.cf-turnstile') as TurnstileElement | null;
+        if (turnstileElement && turnstileElement.dataset.sitekey) {
+            window.turnstile.render('.cf-turnstile', {
+                sitekey: turnstileElement.dataset.sitekey,
+                theme: 'auto'  // Utilisation du thème automatique
+            });
+        }
+    };
+</script>
