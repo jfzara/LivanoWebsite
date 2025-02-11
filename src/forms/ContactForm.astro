@@ -182,67 +182,48 @@ if (Astro.request.method === 'POST') {
             </div>
         </div>
 
-       <!-- Turnstile widget -->
-       <div class="mt-4 flex justify-center">
-        <div class="cf-turnstile" 
-             data-sitekey={import.meta.env.TURNSTILE_SITE_KEY}
-             data-theme="auto">
-        </div>
+<!-- Turnstile widget -->
+<div class="mt-4 flex justify-center">
+    <div id="turnstile-widget" 
+         class="cf-turnstile" 
+         data-sitekey={import.meta.env.TURNSTILE_SITE_KEY}
+         data-callback="onTurnstileSuccess"
+         data-appearance="always"
+         data-language="en"
+         data-size="normal"
+         data-theme="auto"
+         data-retry="auto">
     </div>
-
-        <div class="mt-3 flex justify-center">
-            <Button variant={"primary"} type="submit">
-                <span class="text-white relative z-[5]">Submit</span>
-            </Button>
-        </div>
-    </form>
 </div>
 
-rgb(75, 85, 99)
+<!-- Ajoutez ce script juste après le widget -->
+<script is:inline>
+    function onTurnstileSuccess(token) {
+        console.log("Turnstile validated");
+        const errorMessage = document.querySelector('.turnstile-error');
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+    }
+
+    window.onloadTurnstileCallback = function() {
+        if (typeof turnstile !== 'undefined') {
+            turnstile.ready(function () {
+                turnstile.render('#turnstile-widget');
+            });
+        }
+    };
+</script>
+
+<div class="mt-3 flex justify-center">
+    <Button variant={"primary"} type="submit">
+        <span class="text-white relative z-[5]">Submit</span>
+    </Button>
+</div>
+
 <!-- Add Turnstile script -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
     import "../scripts/contactFormHandler.js";
-
-    // Types pour Turnstile
-    interface TurnstileObject {
-        render: (selector: string, options: TurnstileOptions) => string;
-        reset: (widgetId: string) => void;
-    }
-
-    interface TurnstileOptions {
-        sitekey: string;
-        theme?: 'light' | 'dark' | 'auto';
-        callback?: (token: string) => void;
-        'refresh-expired'?: string;
-        'retry-interval'?: string;
-        size?: string;
-        'response-field'?: boolean;
-        'response-field-name'?: string;
-    }
-
-    interface TurnstileElement extends HTMLElement {
-        dataset: {
-            sitekey: string;
-        };
-    }
-
-    declare global {
-        interface Window {
-            turnstile: TurnstileObject;
-            onloadTurnstileCallback: () => void;
-        }
-    }
-
-    // Configuration de Turnstile avec thème automatique
-    window.onloadTurnstileCallback = function() {
-        const turnstileElement = document.querySelector('.cf-turnstile') as TurnstileElement | null;
-        if (turnstileElement && turnstileElement.dataset.sitekey) {
-            window.turnstile.render('.cf-turnstile', {
-                sitekey: turnstileElement.dataset.sitekey,
-                theme: 'auto'  // Utilisation du thème automatique
-            });
-        }
-    };
 </script>

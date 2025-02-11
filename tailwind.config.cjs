@@ -16,6 +16,29 @@ module.exports = {
 			},
 			screens:{
 				midmd:"880px"
+			},
+			keyframes: {
+				fadeIn: {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' },
+				},
+				fadeOut: {
+					'0%': { opacity: '1' },
+					'100%': { opacity: '0' },
+				},
+				flicker: {
+					'0%, 100%': { opacity: '1' },
+					'16.67%': { opacity: '0.8' },
+					'33.33%': { opacity: '1' },
+					'50%': { opacity: '0.8' },
+					'66.67%': { opacity: '1' },
+					'83.33%': { opacity: '0.8' },
+				}
+			},
+			animation: {
+				fadeIn: 'fadeIn 0.4s ease-in',
+				fadeOut: 'fadeOut 0.9s ease-out',
+				flicker: 'flicker 0.6s ease-in-out'
 			}
 		},
 	},

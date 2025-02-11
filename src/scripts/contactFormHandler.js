@@ -1,4 +1,3 @@
-// Gestionnaire de formulaire de contact
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactForm');
     const messageTextarea = form.querySelector('textarea[name="message"]');
@@ -7,48 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let resetTimeout = null;
     let shouldReset = false;
     let successTextTimeout = null;
-
-    // AJOUT ICI : Gestion du mode sombre pour Turnstile
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    function updateTurnstileTheme() {
-        const turnstileWidget = document.getElementById('turnstile-widget');
-        if (!turnstileWidget) return;
-
-        const isDarkMode = darkModeMediaQuery.matches;
-        turnstileWidget.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
-        
-        // Si le widget est déjà rendu, on le recharge avec le nouveau thème
-        if (window.turnstile) {
-            window.turnstile.reset('#turnstile-widget');
-        }
-    }
-
-    // Initialisation du thème
-    updateTurnstileTheme();
-
-    // Écoute des changements de thème
-    darkModeMediaQuery.addEventListener('change', updateTurnstileTheme);
-
-    // Configuration du widget Turnstile
-    window.onloadTurnstileCallback = function() {
-        turnstileWidget = turnstile.render('#turnstile-widget', { // Modifié ici pour utiliser l'ID
-            sitekey: document.querySelector('.cf-turnstile').dataset.sitekey,
-            theme: darkModeMediaQuery.matches ? 'dark' : 'light', // Modifié ici
-            appearance: 'checkbox',
-            'refresh-expired': 'manual',
-            'retry-interval': 'never',
-            size: 'normal',
-            'response-field': true,
-            'response-field-name': 'cf-turnstile-response',
-            callback: function(token) {
-                const errorMessage = form.querySelector('.turnstile-error');
-                if (errorMessage) {
-                    errorMessage.remove();
-                }
-            }
-        });
-    };
 
     // Mise à jour du compteur de caractères
     function updateMessageLength() {
@@ -63,164 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mise à jour du compteur lors de la saisie
     messageTextarea.addEventListener('input', updateMessageLength);
 
-    // Fonction pour afficher le message de succès
-    function showSuccessMessage() {
-        // Supprimer l'ancien message de succès s'il existe
-        const oldSuccess = form.querySelector('.success-message');
-        if (oldSuccess) {
-            oldSuccess.remove();
-        }
-
-        const successDiv = document.createElement('div');
-        successDiv.className = 'mb-[1.3rem] flex justify-center success-message';
-        successDiv.setAttribute('role', 'alert');
-        successDiv.innerHTML = `
-            <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs success-container">
-                <span class="text-primary dark:text-blue-400 font-medium success-text"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-primary dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-            </div>
-        `;
-
-        // Ajouter le style pour l'animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes success-flash {
-                0%, 100% {
-                    background-color: rgba(29, 78, 216, 0.1);
-                    border-color: rgb(29, 78, 216);
-                }
-                50% {
-                    background-color: rgba(29, 78, 216, 0.2);
-                    border-color: rgba(29, 78, 216, 0.8);
-                }
-            }
-
-            .success-container {
-                animation: success-flash 0.6s ease-in-out 3;
-                border: 1.5px solid;
-                background-color: rgba(29, 78, 216, 0.1);
-                border-color: rgb(29, 78, 216);
-            }
-
-            @media (prefers-color-scheme: dark) {
-                .success-container {
-                    background-color: rgba(96, 165, 250, 0.2);
-                    border-color: rgb(96, 165, 250);
-                }
-
-                @keyframes success-flash {
-                    0%, 100% {
-                        background-color: rgba(96, 165, 250, 0.2);
-                        border-color: rgb(96, 165, 250);
-                    }
-                    50% {
-                        background-color: rgba(96, 165, 250, 0.3);
-                        border-color: rgba(96, 165, 250, 0.8);
-                    }
-                }
-            }
-        `;
-
-        document.head.appendChild(style);
-        form.insertBefore(successDiv, form.firstChild);
-
-        // Afficher le texte "Sent" pendant 2 secondes
-        const successText = successDiv.querySelector('.success-text');
-        successText.textContent = 'Sent';
-        
-        successTextTimeout = setTimeout(() => {
-            if (successText) {
-                successText.textContent = '';
-            }
-        }, 2000);
-
-        // Supprimer le message et le style après 3 secondes
-        setTimeout(() => {
-            successDiv.remove();
-            style.remove();
-        }, 3000);
-    }
-
-    // Fonction pour réinitialiser complètement le formulaire
-    function resetForm() {
-        form.reset();
-        if (turnstileWidget) {
-            turnstile.reset(turnstileWidget);
-        }
-        updateMessageLength();
-        const errorMessages = form.querySelectorAll('.turnstile-error');
-        errorMessages.forEach(msg => msg.remove());
-        shouldReset = false;
-        
-        // Nettoyer les timeouts
-        if (successTextTimeout) {
-            clearTimeout(successTextTimeout);
-        }
-    }
-
-    // Gestionnaire d'événements pour les interactions utilisateur
-    function handleUserInteraction() {
-        if (shouldReset) {
-            resetForm();
-        }
-    }
-
-    // Ajouter les écouteurs d'événements pour la réinitialisation par clic
-    const formInputs = form.querySelectorAll('input, textarea');
-    formInputs.forEach(input => {
-        input.addEventListener('focus', handleUserInteraction);
-        input.addEventListener('click', handleUserInteraction);
-    });
-
-    // Gestion de la soumission du formulaire
+    // Gestion de la soumission du formulaire - UN SEUL événement submit
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Réinitialisation des messages d'erreur personnalisés
-        const inputs = form.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.setCustomValidity('');
-        });
-
-        // Validation personnalisée du nom
-        const nameInput = form.querySelector('input[name="name"]');
-        if (nameInput.value.length < 2) {
-            nameInput.setCustomValidity('Please enter your full name (minimum 2 letters)');
-            nameInput.reportValidity();
-            return;
-        }
-
-        // Validation personnalisée de l'email
-        const emailInput = form.querySelector('input[name="email"]');
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailInput.value)) {
-            emailInput.setCustomValidity('Please enter a valid email address');
-            emailInput.reportValidity();
-            return;
-        }
-
-        // Validation personnalisée du numéro de téléphone
-        const phoneInput = form.querySelector('input[name="phone"]');
-        if (phoneInput.value) {
-            const phoneRegex = /^[0-9+\-\(\)\s]*$/;
-            if (!phoneRegex.test(phoneInput.value)) {
-                phoneInput.setCustomValidity('Please use only numbers and these symbols: + - ( )');
-                phoneInput.reportValidity();
-                return;
-            }
-        }
-
-        // Validation du message
-        const messageInput = form.querySelector('textarea[name="message"]');
-        if (!messageInput.value.trim()) {
-            messageInput.setCustomValidity('Please enter your message');
-            messageInput.reportValidity();
-            return;
-        }
-
-        // Validation stricte du Turnstile
+        // Validation du Turnstile en premier
         const turnstileResponse = form.querySelector('[name="cf-turnstile-response"]');
         if (!turnstileResponse || !turnstileResponse.value) {
             const errorDiv = document.createElement('div');
@@ -234,8 +38,30 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const turnstileWidget = form.querySelector('.cf-turnstile');
             turnstileWidget.parentNode.insertBefore(errorDiv, turnstileWidget.nextSibling);
-            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            return; // Arrête la soumission du formulaire
+            return false;
+        }
+
+        // Validation des autres champs
+        const nameInput = form.querySelector('input[name="name"]');
+        if (nameInput.value.length < 2) {
+            nameInput.setCustomValidity('Please enter your full name (minimum 2 letters)');
+            nameInput.reportValidity();
+            return;
+        }
+
+        const emailInput = form.querySelector('input[name="email"]');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value)) {
+            emailInput.setCustomValidity('Please enter a valid email address');
+            emailInput.reportValidity();
+            return;
+        }
+
+        const messageInput = form.querySelector('textarea[name="message"]');
+        if (!messageInput.value.trim()) {
+            messageInput.setCustomValidity('Please enter your message');
+            messageInput.reportValidity();
+            return;
         }
 
         try {
@@ -250,16 +76,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             showSuccessMessage();
-            
-            // Forcer la réinitialisation immédiate du widget Turnstile
-            if (turnstileWidget) {
-                turnstile.reset(turnstileWidget);
-            }
-            
-            // Activer le flag de réinitialisation
             shouldReset = true;
             
-            // Planifier la réinitialisation automatique après 3 secondes
+            // Réinitialisation après 3 secondes
             resetTimeout = setTimeout(() => {
                 if (shouldReset) {
                     resetForm();
@@ -274,5 +93,58 @@ document.addEventListener('DOMContentLoaded', function() {
             form.insertBefore(errorDiv, form.firstChild);
             setTimeout(() => errorDiv.remove(), 3000);
         }
+    });
+
+    // Autres fonctions de support
+    function showSuccessMessage() {
+        const oldSuccess = form.querySelector('.success-message');
+        if (oldSuccess) {
+            oldSuccess.remove();
+        }
+
+        const successDiv = document.createElement('div');
+        successDiv.className = 'mb-[1.3rem] flex justify-center success-message animate-fadeIn';
+        successDiv.setAttribute('role', 'alert');
+        successDiv.innerHTML = `
+            <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-blue-50/80 dark:bg-blue-900/20 border border-blue-500/30 success-container">
+                <span class="text-blue-600 dark:text-blue-400 font-medium success-text">Sent</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        `;
+
+        form.insertBefore(successDiv, form.firstChild);
+
+        // Animation de clignotement avant la disparition
+        setTimeout(() => {
+            const container = successDiv.querySelector('.success-container');
+            container.classList.add('animate-flicker');
+        }, 2700);
+
+        setTimeout(() => {
+            successDiv.classList.add('animate-fadeOut');
+            setTimeout(() => successDiv.remove(), 300);
+        }, 3000);
+    }
+
+    function resetForm() {
+        form.reset();
+        if (window.turnstile) {
+            window.turnstile.reset();
+        }
+        updateMessageLength();
+        const errorMessages = form.querySelectorAll('.turnstile-error');
+        errorMessages.forEach(msg => msg.remove());
+        shouldReset = false;
+    }
+
+    // Réinitialisation sur interaction utilisateur
+    form.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('focus', () => {
+            if (shouldReset) {
+                resetForm();
+            }
+        });
     });
 });

@@ -18,7 +18,7 @@ def test_form():
 
     try:
         print("Ouverture de la page...")
-        driver.get("http://localhost:4325")
+        driver.get("http://localhost:4321")
         time.sleep(3)
 
         print("Remplissage du formulaire...")
