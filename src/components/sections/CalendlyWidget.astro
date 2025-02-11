@@ -2,7 +2,7 @@
 import Container from "../shared/Container.astro";
 ---
 
-<section id="calendly-section" class="py-0">
+<section id="calendly-section" class="py-0 mb-16 sm:mb-20">
     <Container>
         <div class="max-w-3xl mx-auto text-center mb-1">
             <h2 class="text-3xl/tight sm:text-4xl/tight md:text-5xl/tight font-bold text-heading-1">
@@ -13,17 +13,27 @@ import Container from "../shared/Container.astro";
             </p>
         </div>
         <div class="overflow-hidden relative">
-            <div class="calendly-inline-widget mb-0 h-[850px] sm:h-[890px] md:h-[895px] lg:h-[900px]" 
-            data-url="https://calendly.com/livano-livanoagency/30min?hide_gdpr_banner=1" 
+            <div class="calendly-inline-widget h-[900px] sm:h-[920px] md:h-[940px] lg:h-[960px]" 
+                 data-url="https://calendly.com/livano-livanoagency/30min?hide_gdpr_banner=1" 
                  style="position: relative;-webkit-overflow-scrolling:touch;min-width:320px;">
             </div>
-            <div class="absolute bottom-0 left-0 right-0 h-20 bg-body"></div>
         </div>
         <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
     </Container>
 </section>
 
 <style>
+    .calendly-inline-widget {
+        width: 100%;
+        overflow: hidden !important;
+    }
+
+    @media (max-width: 640px) {
+        .calendly-inline-widget {
+            margin-bottom: 80px; /* Espace pour le footer en mobile */
+        }
+    }
+
     @media (min-width: 640px) and (max-width: 1023px) {
         :global(.calendly-badge-widget) {
             display: none !important;
