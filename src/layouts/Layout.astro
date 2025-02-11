@@ -8,13 +8,10 @@ interface Props {
 
 const { title } = Astro.props;
 const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap';
-
-// Déterminer le thème initial côté serveur
-const theme = Astro.cookies.get('theme')?.value || 'light';
 ---
 
 <!DOCTYPE html>
-<html lang="en" class={theme === 'dark' ? 'dark' : ''}>
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
@@ -25,6 +22,21 @@ const theme = Astro.cookies.get('theme')?.value || 'light';
         <meta name="generator" content={Astro.generator} />
         <meta name="description" content="Influencers & Affiliates Marketing Agency">
         <title>Livano Agency - Affiliate marketing</title>
+        
+        <!-- Script de thème -->
+        <script is:inline>
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (e.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+        </script>
         
         <!-- Préchargement optimisé des polices -->
         <link 

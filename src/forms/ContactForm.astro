@@ -198,55 +198,7 @@ if (Astro.request.method === 'POST') {
     </form>
 </div>
 
-<style>
-    /* Styles de base */
-    :global(:root) {
-        --success-bg: rgba(29, 78, 216, 0.1);
-        --success-bg-flash: rgba(29, 78, 216, 0.2);
-        --success-border: rgb(29, 78, 216);
-        --success-border-flash: rgba(29, 78, 216, 0.8);
-    }
-
-    :global(:root.dark) {
-        --success-bg: rgba(96, 165, 250, 0.2);
-        --success-bg-flash: rgba(96, 165, 250, 0.3);
-        --success-border: rgb(96, 165, 250);
-        --success-border-flash: rgba(96, 165, 250, 0.8);
-    }
-
-    /* Styles pour le widget Turnstile */
-    :global(.cf-turnstile) {
-        margin: 0 auto !important;
-        display: block !important;
-        max-width: fit-content !important;
-    }
-
-    /* Reste des styles */
-    @keyframes success-flash {
-        0%, 100% {
-            background-color: var(--success-bg);
-            border-color: var(--success-border);
-        }
-        50% {
-            background-color: var(--success-bg-flash);
-            border-color: var(--success-border-flash);
-        }
-    }
-
-    .success-container {
-        animation: success-flash 0.6s ease-in-out 3;
-        border: 1.5px solid;
-        background-color: var(--success-bg);
-        border-color: var(--success-border);
-    }
-
-    :global(.dark) input,
-    :global(.dark) textarea {
-        background-color: var(--box-bg);
-        border-color: var(--box-border);
-        color: var(--heading-2);
-    }
-</style>
+rgb(75, 85, 99)
 <!-- Add Turnstile script -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
