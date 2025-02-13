@@ -11,7 +11,7 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
@@ -20,10 +20,10 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
         <link rel="icon" type="image/webp" href="/images/Black Logo No Background.webp" media="(prefers-color-scheme: light)" />
         <link rel="icon" type="image/webp" href="/images/White Logo No Background.webp" media="(prefers-color-scheme: dark)" />
         <meta name="generator" content={Astro.generator} />
-        <meta name="description" content="Influencers & Affiliates Marketing Agency">
-        <title>Livano Agency - Affiliate marketing</title>
+        <meta name="description" content="Agence de Marketing d'Influence et d'Affiliation">
+        <title>Livano Agency - Marketing d'affiliation</title>
         
-        <!-- Script de thème -->
+        <!-- Script du thème -->
         <script is:inline>
             requestAnimationFrame(() => {
                 if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -40,14 +40,14 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
             });
         </script>
         
-        <!-- Chargement de police -->
+        <!-- Chargement de la police -->
         <link 
             href={fontUrl}
             rel="stylesheet"
             crossorigin="anonymous"
         />
 
-        <!-- Styles critiques -->
+        <!-- Styles essentiels -->
         <style is:inline>
             :root {
                 --color-bg: 255 255 255;
@@ -84,8 +84,6 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
                 }
             }
         </style>
-
-    
     </head>
     <body class="bg-body min-h-screen flex flex-col">
         <Navbar />
