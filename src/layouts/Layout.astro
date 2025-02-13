@@ -25,35 +25,27 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
         
         <!-- Script de thème -->
         <script is:inline>
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.classList.add('dark');
-            }
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                if (e.matches) {
+            requestAnimationFrame(() => {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
                 }
+
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (e.matches) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                });
             });
         </script>
         
-        <!-- Préchargement optimisé des polices -->
+        <!-- Chargement de police -->
         <link 
-            rel="preload" 
             href={fontUrl}
-            as="style"
+            rel="stylesheet"
             crossorigin="anonymous"
-            onload="this.onload=null;this.rel='stylesheet'"
         />
-        <noscript>
-            <link 
-                href={fontUrl}
-                rel="stylesheet"
-                type="text/css"
-                crossorigin="anonymous"
-            />
-        </noscript>
 
         <!-- Styles critiques -->
         <style is:inline>
@@ -93,18 +85,9 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
             }
         </style>
 
-        <!-- Google Analytics -->
-        <script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-QRGHEM79CZ"></script>
-        <script type="text/partytown">
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                window.dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-            gtag('config', 'G-QRGHEM79CZ');
-        </script>
+    
     </head>
-    <body class="overflow-hidden overflow-y-auto bg-body min-h-screen flex flex-col">
+    <body class="bg-body min-h-screen flex flex-col">
         <Navbar />
         <main class="relative z-10 pt-0 flex-1 flex flex-col">
             <slot />
@@ -113,7 +96,13 @@ const fontUrl = 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;5
     </body>
 </html>
 
-<script src="/scripts/themeNav.ts" defer></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const script = document.createElement('script');
+        script.src = '/scripts/themeNav.ts';
+        document.body.appendChild(script);
+    });
+</script>
 
 <style is:inline>
     [data-toggle-nav][data-open-nav="true"] #line1 {

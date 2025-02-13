@@ -86,7 +86,10 @@ const videos: Video[] = [
                         <video 
                             class={`phone-video ${index === 0 ? 'active' : ''}`}
                             muted 
+                            autoplay
                             playsinline
+                            webkit-playsinline
+                            x-webkit-airplay="deny"
                             preload={index === 0 ? "auto" : "none"}
                             data-index={index}
                             poster={video.poster}
@@ -95,12 +98,12 @@ const videos: Video[] = [
                             aria-label={`Promotional video ${index + 1}`}
                         >
                             <source 
-                                src={video.webm} 
-                                type="video/webm"
-                            />
-                            <source 
                                 src={video.mp4} 
                                 type="video/mp4"
+                            />
+                            <source 
+                                src={video.webm} 
+                                type="video/webm"
                             />
                             Your browser does not support videos.
                         </video>
@@ -147,6 +150,7 @@ const videos: Video[] = [
         border-radius: 30px;
         overflow: hidden;
         contain: content;
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
     }
 
     .phone-video {
