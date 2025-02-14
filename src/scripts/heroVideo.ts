@@ -36,7 +36,7 @@ class VideoPlayer {
 
             // Ajouter un écouteur pour la fin de chaque vidéo
             video.addEventListener('timeupdate', () => {
-                // Déclencher la transition juste avant la fin de la vidéo
+                // Déclencher la transition juste avant la fin de la vidéo.
                 if (video.currentTime >= video.duration - 0.1 && !this.isTransitioning) {
                     void this.switchVideo();
                 }
