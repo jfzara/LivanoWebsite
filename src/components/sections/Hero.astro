@@ -86,8 +86,8 @@ const videos: Video[] = [
                         <video 
                             class={`phone-video ${index === 0 ? 'active' : ''}`}
                             muted 
-                            autoplay
                             playsinline
+                            autoplay
                             webkit-playsinline="true"
                             x-webkit-airplay="deny"
                             preload={index === 0 ? "auto" : "none"}
@@ -125,6 +125,8 @@ const videos: Video[] = [
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         border: 8px solid var(--phone-frame-color);
         overflow: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
     }
 
     .phone-frame::before {
@@ -147,6 +149,9 @@ const videos: Video[] = [
         height: 100%;
         border-radius: 30px;
         overflow: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
     }
 
     .phone-video {
@@ -159,15 +164,22 @@ const videos: Video[] = [
         opacity: 0;
         transform: translateY(100%);
         will-change: transform, opacity;
+        -webkit-transform: translateY(100%);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
     }
 
     .phone-video.active {
         opacity: 1;
         transform: translateY(0);
+        -webkit-transform: translateY(0);
     }
 
     .phone-video.previous {
         transform: translateY(-100%);
+        -webkit-transform: translateY(-100%);
         opacity: 1;
     }
 
@@ -243,12 +255,13 @@ const videos: Video[] = [
         let currentIndex = 0;
 
         const playVideo = (video: HTMLVideoElement) => {
+            video.currentTime = 0;
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.catch(() => {
-                    // Auto-play was prevented
-                    // Show a "Play" button so that user can start playback
-                    video.play();
+                    setTimeout(() => {
+                        video.play();
+                    }, 50);
                 });
             }
         };
@@ -262,7 +275,6 @@ const videos: Video[] = [
             currentVideo.classList.add('previous');
             nextVideo.classList.add('active');
 
-            // Preload the next video
             if (nextVideo.preload === 'none') {
                 nextVideo.preload = 'auto';
             }
@@ -276,9 +288,13 @@ const videos: Video[] = [
             currentIndex = nextIndex;
         };
 
-        // Initial play
+        // Initial play with retry
         const firstVideo = videos[0] as HTMLVideoElement;
-        playVideo(firstVideo);
+        const tryPlay = () => {
+            playVideo(firstVideo);
+            firstVideo.removeEventListener('loadedmetadata', tryPlay);
+        };
+        firstVideo.addEventListener('loadedmetadata', tryPlay);
 
         // Handle video end
         videos.forEach((video) => {
@@ -286,9 +302,12 @@ const videos: Video[] = [
         });
 
         // Force play on iOS
-        document.addEventListener('touchstart', () => {
+        const forcePlay = () => {
             const currentVideo = videos[currentIndex] as HTMLVideoElement;
             playVideo(currentVideo);
-        }, { once: true });
+        };
+
+        document.addEventListener('touchstart', forcePlay, { once: true });
+        document.addEventListener('click', forcePlay, { once: true });
     });
 </script>
