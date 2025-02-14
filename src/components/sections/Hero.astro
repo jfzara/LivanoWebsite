@@ -4,8 +4,8 @@ import Container from "../shared/Container.astro";
 import Paragraph from "../shared/Paragraph.astro";
 
 interface Video {
-    webm: string;
     mp4: string;
+    webm: string;
     poster: string;
     width: number;
     height: number;
@@ -14,29 +14,29 @@ interface Video {
 const firstFrameImage = "/images/video1-first-frame.webp";
 const videos: Video[] = [
     {
-        webm: "/videos/video1.webm",
         mp4: "/videos/video1.mp4",
+        webm: "/videos/video1.webm",
         poster: firstFrameImage,
         width: 380,
         height: 760
     },
     {
-        webm: "/videos/video2.webm",
         mp4: "/videos/video2.mp4",
+        webm: "/videos/video2.webm",
         poster: firstFrameImage,
         width: 380,
         height: 760
     },
     {
-        webm: "/videos/video3.webm",
         mp4: "/videos/video3.mp4",
+        webm: "/videos/video3.webm",
         poster: firstFrameImage,
         width: 380,
         height: 760
     },
     {
-        webm: "/videos/video4.webm",
         mp4: "/videos/video4.mp4",
+        webm: "/videos/video4.webm",
         poster: firstFrameImage,
         width: 380,
         height: 760
@@ -88,7 +88,7 @@ const videos: Video[] = [
                             muted 
                             autoplay
                             playsinline
-                            webkit-playsinline
+                            webkit-playsinline="true"
                             x-webkit-airplay="deny"
                             preload={index === 0 ? "auto" : "none"}
                             data-index={index}
@@ -105,7 +105,6 @@ const videos: Video[] = [
                                 src={video.webm} 
                                 type="video/webm"
                             />
-                            Your browser does not support videos.
                         </video>
                     ))}
                 </div>
@@ -126,7 +125,6 @@ const videos: Video[] = [
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         border: 8px solid var(--phone-frame-color);
         overflow: hidden;
-        contain: content;
     }
 
     .phone-frame::before {
@@ -149,8 +147,6 @@ const videos: Video[] = [
         height: 100%;
         border-radius: 30px;
         overflow: hidden;
-        contain: content;
-        -webkit-mask-image: -webkit-radial-gradient(white, black);
     }
 
     .phone-video {
@@ -163,8 +159,6 @@ const videos: Video[] = [
         opacity: 0;
         transform: translateY(100%);
         will-change: transform, opacity;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
     }
 
     .phone-video.active {
@@ -205,7 +199,6 @@ const videos: Video[] = [
 
     .hero-text {
         display: block;
-        transform: translateZ(0);
         color: var(--text-heading);
     }
 
@@ -215,8 +208,6 @@ const videos: Video[] = [
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-        transform: translateZ(0);
-        will-change: transform;
         background-size: 200% 100%;
         animation: gradient-shift 8s ease infinite;
     }
@@ -244,13 +235,60 @@ const videos: Video[] = [
         --text-heading: #ffffff;
         --phone-frame-color: #12223b6e;
     }
-
-    @keyframes shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
 </style>
 
 <script>
-    import "../../scripts/heroVideo.ts";
+    document.addEventListener('DOMContentLoaded', () => {
+        const videos = document.querySelectorAll('.phone-video');
+        let currentIndex = 0;
+
+        const playVideo = (video: HTMLVideoElement) => {
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Auto-play was prevented
+                    // Show a "Play" button so that user can start playback
+                    video.play();
+                });
+            }
+        };
+
+        const switchVideo = () => {
+            const currentVideo = videos[currentIndex] as HTMLVideoElement;
+            const nextIndex = (currentIndex + 1) % videos.length;
+            const nextVideo = videos[nextIndex] as HTMLVideoElement;
+
+            currentVideo.classList.remove('active');
+            currentVideo.classList.add('previous');
+            nextVideo.classList.add('active');
+
+            // Preload the next video
+            if (nextVideo.preload === 'none') {
+                nextVideo.preload = 'auto';
+            }
+
+            playVideo(nextVideo);
+
+            setTimeout(() => {
+                currentVideo.classList.remove('previous');
+            }, 1000);
+
+            currentIndex = nextIndex;
+        };
+
+        // Initial play
+        const firstVideo = videos[0] as HTMLVideoElement;
+        playVideo(firstVideo);
+
+        // Handle video end
+        videos.forEach((video) => {
+            video.addEventListener('ended', switchVideo);
+        });
+
+        // Force play on iOS
+        document.addEventListener('touchstart', () => {
+            const currentVideo = videos[currentIndex] as HTMLVideoElement;
+            playVideo(currentVideo);
+        }, { once: true });
+    });
 </script>
