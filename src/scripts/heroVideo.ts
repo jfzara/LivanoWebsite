@@ -2,7 +2,7 @@ class VideoPlayer {
     private videos: HTMLVideoElement[];
     private currentIndex: number;
     private isTransitioning: boolean;
-    private readonly VIDEO_DURATION = 2000;
+    private readonly TRANSITION_DURATION = 1000;
 
     constructor() {
         this.videos = Array.from(document.querySelectorAll('.phone-video'));
@@ -14,54 +14,63 @@ class VideoPlayer {
     private init(): void {
         if (this.videos.length === 0) return;
 
-        const placeholder = document.querySelector('.placeholder-image');
-        if (placeholder) {
-            placeholder.remove();
-        }
-
         this.setupVideos();
-        this.preloadNextVideo(0);
-        setTimeout(() => this.startVideoSequence(), 500);
+        this.preloadAllVideos();
+        void this.playFirstVideo();
     }
 
     private setupVideos(): void {
         this.videos.forEach((video, index) => {
-            video.loop = false; // Désactive la boucle pour contrôler précisément la durée
+            video.loop = false;
+            video.preload = 'auto';
+            video.muted = true;
+            video.playsInline = true;
+            
             if (index === 0) {
-                video.classList.add('active');
-                this.setupFirstVideo(video);
+                video.style.opacity = '1';
+                video.style.transform = 'translateY(0)';
             } else {
-                this.setupOtherVideo(video);
+                video.style.transform = 'translateY(100%)';
+                video.style.opacity = '0';
             }
+
+            // Ajouter un écouteur pour la fin de chaque vidéo
+            video.addEventListener('timeupdate', () => {
+                // Déclencher la transition juste avant la fin de la vidéo
+                if (video.currentTime >= video.duration - 0.1 && !this.isTransitioning) {
+                    void this.switchVideo();
+                }
+            });
         });
     }
 
-    private setupFirstVideo(video: HTMLVideoElement): void {
-        video.style.transform = 'translateY(0)';
-        video.style.opacity = '1';
-        video.load();
-        video.play().catch(console.error);
+    private preloadAllVideos(): void {
+        this.videos.forEach(video => {
+            video.load();
+        });
     }
 
-    private setupOtherVideo(video: HTMLVideoElement): void {
-        video.style.transform = 'translateY(100%)';
-        video.style.opacity = '0';
-        video.load();
-    }
-
-    private preloadNextVideo(index: number): void {
-        const nextIndex = (index + 1) % this.videos.length;
-        const nextVideo = this.videos[nextIndex];
-        if (nextVideo?.preload === 'none') {
-            nextVideo.preload = 'auto';
+    private async playFirstVideo(): Promise<void> {
+        const firstVideo = this.videos[0];
+        try {
+            await firstVideo.play();
+        } catch (error) {
+            console.error('Initial playback failed:', error);
+            const playOnInteraction = async (): Promise<void> => {
+                try {
+                    await firstVideo.play();
+                    document.removeEventListener('touchstart', playOnInteraction);
+                    document.removeEventListener('click', playOnInteraction);
+                } catch (e) {
+                    console.error('Playback failed after interaction:', e);
+                }
+            };
+            document.addEventListener('touchstart', playOnInteraction);
+            document.addEventListener('click', playOnInteraction);
         }
     }
 
-    private startVideoSequence(): void {
-        this.playNextVideo();
-    }
-
-    private async playNextVideo(): Promise<void> {
+    private async switchVideo(): Promise<void> {
         if (this.isTransitioning) return;
         this.isTransitioning = true;
 
@@ -72,51 +81,41 @@ class VideoPlayer {
         try {
             // Prépare la prochaine vidéo
             nextVideo.currentTime = 0;
+            nextVideo.style.transition = 'none';
             nextVideo.style.transform = 'translateY(100%)';
             nextVideo.style.opacity = '1';
+
+            // Démarre la lecture de la prochaine vidéo
             await nextVideo.play();
 
-            // Anime la transition
+            // Applique la transition
             requestAnimationFrame(() => {
-                currentVideo.style.transition = 'transform 1s ease-out';
-                nextVideo.style.transition = 'transform 1s ease-out';
+                currentVideo.style.transition = `transform ${this.TRANSITION_DURATION}ms ease-out`;
+                nextVideo.style.transition = `transform ${this.TRANSITION_DURATION}ms ease-out`;
                 
                 currentVideo.style.transform = 'translateY(-100%)';
                 nextVideo.style.transform = 'translateY(0)';
             });
 
+            // Met à jour l'index
             this.currentIndex = nextIndex;
 
-            // Gestion de la fin de la transition
+            // Nettoie après la transition
             setTimeout(() => {
-                this.isTransitioning = false;
                 currentVideo.style.opacity = '0';
                 currentVideo.style.transform = 'translateY(100%)';
                 currentVideo.style.transition = 'none';
-                this.preloadNextVideo(nextIndex);
-
-                // Gestion spéciale pour la dernière vidéo
-                if (this.currentIndex === this.videos.length - 1) {
-                    // Attend la fin naturelle de la vidéo
-                    nextVideo.addEventListener('ended', () => {
-                        nextVideo.currentTime = 0; // Réinitialise la vidéo
-                        this.playNextVideo();
-                    }, { once: true });
-                } else {
-                    // Pour les autres vidéos, utilise la durée fixe
-                    setTimeout(() => {
-                        this.playNextVideo();
-                    }, this.VIDEO_DURATION);
-                }
-            }, 1000);
+                this.isTransitioning = false;
+            }, this.TRANSITION_DURATION);
 
         } catch (error) {
-            console.error('Error during video transition:', error);
+            console.error('Video transition failed:', error);
             this.isTransitioning = false;
         }
     }
 }
 
+// Initialise le lecteur vidéo quand le DOM est prêt
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => new VideoPlayer());
 } else {

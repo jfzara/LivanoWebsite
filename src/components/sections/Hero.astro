@@ -81,13 +81,12 @@ const videos: Video[] = [
 
         <div class="flex flex-1 lg:w-1/2 lg:h-auto relative lg:max-w-none lg:mx-0 mx-auto max-w-3xl">
             <div class="phone-frame">
-                <div class="video-container" data-loading="true">
+                <div class="video-container">
                     {videos.map((video, index) => (
                         <video 
-                            class={`phone-video ${index === 0 ? 'active' : ''}`}
+                            class="phone-video"
                             muted 
                             playsinline
-                            autoplay
                             webkit-playsinline="true"
                             x-webkit-airplay="deny"
                             preload={index === 0 ? "auto" : "none"}
@@ -96,14 +95,15 @@ const videos: Video[] = [
                             width={video.width}
                             height={video.height}
                             aria-label={`Promotional video ${index + 1}`}
+                            style={index === 0 ? "opacity: 1; transform: translateY(0);" : ""}
                         >
-                            <source 
-                                src={video.mp4} 
-                                type="video/mp4"
-                            />
                             <source 
                                 src={video.webm} 
                                 type="video/webm"
+                            />
+                            <source 
+                                src={video.mp4} 
+                                type="video/mp4"
                             />
                         </video>
                     ))}
@@ -125,8 +125,7 @@ const videos: Video[] = [
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         border: 8px solid var(--phone-frame-color);
         overflow: hidden;
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
+        contain: content;
     }
 
     .phone-frame::before {
@@ -149,9 +148,7 @@ const videos: Video[] = [
         height: 100%;
         border-radius: 30px;
         overflow: hidden;
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
-        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        contain: content;
     }
 
     .phone-video {
@@ -164,24 +161,9 @@ const videos: Video[] = [
         opacity: 0;
         transform: translateY(100%);
         will-change: transform, opacity;
-        -webkit-transform: translateY(100%);
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
-        transition: transform 1s ease-out, opacity 0.5s ease-out;
-    }
-
-    .phone-video.active {
-        opacity: 1;
-        transform: translateY(0);
-        -webkit-transform: translateY(0);
-    }
-
-    .phone-video.previous {
-        transform: translateY(-100%);
-        -webkit-transform: translateY(-100%);
-        opacity: 1;
+        transition: transform 1s ease-out, opacity 0.2s ease-out;
     }
 
     @media (min-width: 1024px) {
@@ -212,6 +194,7 @@ const videos: Video[] = [
 
     .hero-text {
         display: block;
+        transform: translateZ(0);
         color: var(--text-heading);
     }
 
@@ -221,6 +204,8 @@ const videos: Video[] = [
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+        transform: translateZ(0);
+        will-change: transform;
         background-size: 200% 100%;
         animation: gradient-shift 8s ease infinite;
     }
@@ -251,109 +236,5 @@ const videos: Video[] = [
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const videos = document.querySelectorAll('.phone-video');
-        let currentIndex = 0;
-        let isTransitioning = false;
-        const TRANSITION_DURATION = 2000;
-
-        const playVideo = async (video: HTMLVideoElement) => {
-            try {
-                video.currentTime = 0;
-                await video.play();
-            } catch (error) {
-                console.error('Playback failed:', error);
-                // Retry play on user interaction
-                const playOnInteraction = async () => {
-                    try {
-                        await video.play();
-                        document.removeEventListener('touchstart', playOnInteraction);
-                        document.removeEventListener('click', playOnInteraction);
-                    } catch (e) {
-                        console.error('Retry failed:', e);
-                    }
-                };
-                document.addEventListener('touchstart', playOnInteraction);
-                document.addEventListener('click', playOnInteraction);
-            }
-        };
-
-        const switchVideo = async () => {
-            if (isTransitioning) return;
-            isTransitioning = true;
-
-            const currentVideo = videos[currentIndex] as HTMLVideoElement;
-            const nextIndex = (currentIndex + 1) % videos.length;
-            const nextVideo = videos[nextIndex] as HTMLVideoElement;
-
-            // Précharge et prépare la prochaine vidéo
-            if (nextVideo.preload === 'none') {
-                nextVideo.preload = 'auto';
-            }
-
-            try {
-                // Prépare la prochaine vidéo
-                nextVideo.style.transform = 'translateY(100%)';
-                nextVideo.style.opacity = '1';
-                await playVideo(nextVideo);
-
-                // Animation de transition
-                currentVideo.classList.remove('active');
-                currentVideo.classList.add('previous');
-                nextVideo.classList.add('active');
-
-                // Nettoie l'ancienne vidéo après la transition
-                setTimeout(() => {
-                    currentVideo.classList.remove('previous');
-                    isTransitioning = false;
-
-                    // Planifie la prochaine transition
-                    if (nextIndex === videos.length - 1) {
-                        // Pour la dernière vidéo, attendre sa fin naturelle
-                        nextVideo.addEventListener('ended', () => {
-                            currentIndex = 0;
-                            switchVideo();
-                        }, { once: true });
-                    } else {
-                        setTimeout(() => switchVideo(), TRANSITION_DURATION);
-                    }
-                }, 1000);
-
-                currentIndex = nextIndex;
-            } catch (error) {
-                console.error('Switch failed:', error);
-                isTransitioning = false;
-            }
-        };
-
-        // Initialisation
-        const initializeCarousel = async () => {
-            const firstVideo = videos[0] as HTMLVideoElement;
-            
-            // Attendre que la vidéo soit chargée
-            if (firstVideo.readyState >= 2) {
-                await playVideo(firstVideo);
-                setTimeout(() => switchVideo(), TRANSITION_DURATION);
-            } else {
-                firstVideo.addEventListener('loadeddata', async () => {
-                    await playVideo(firstVideo);
-                    setTimeout(() => switchVideo(), TRANSITION_DURATION);
-                }, { once: true });
-            }
-        };
-
-        // Force play on iOS
-        const forcePlayOnInteraction = () => {
-            const currentVideo = videos[currentIndex] as HTMLVideoElement;
-            playVideo(currentVideo);
-            document.removeEventListener('touchstart', forcePlayOnInteraction);
-            document.removeEventListener('click', forcePlayOnInteraction);
-        };
-
-        document.addEventListener('touchstart', forcePlayOnInteraction);
-        document.addEventListener('click', forcePlayOnInteraction);
-
-        // Démarrer le carrousel
-        initializeCarousel();
-    });
+    import '../../scripts/heroVideo.ts';
 </script>
