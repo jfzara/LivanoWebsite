@@ -169,6 +169,7 @@ const videos: Video[] = [
         -webkit-backface-visibility: hidden;
         transform: translateZ(0);
         -webkit-transform: translateZ(0);
+        transition: transform 1s ease-out, opacity 0.5s ease-out;
     }
 
     .phone-video.active {
@@ -253,61 +254,106 @@ const videos: Video[] = [
     document.addEventListener('DOMContentLoaded', () => {
         const videos = document.querySelectorAll('.phone-video');
         let currentIndex = 0;
+        let isTransitioning = false;
+        const TRANSITION_DURATION = 2000;
 
-        const playVideo = (video: HTMLVideoElement) => {
-            video.currentTime = 0;
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    setTimeout(() => {
-                        video.play();
-                    }, 50);
-                });
+        const playVideo = async (video: HTMLVideoElement) => {
+            try {
+                video.currentTime = 0;
+                await video.play();
+            } catch (error) {
+                console.error('Playback failed:', error);
+                // Retry play on user interaction
+                const playOnInteraction = async () => {
+                    try {
+                        await video.play();
+                        document.removeEventListener('touchstart', playOnInteraction);
+                        document.removeEventListener('click', playOnInteraction);
+                    } catch (e) {
+                        console.error('Retry failed:', e);
+                    }
+                };
+                document.addEventListener('touchstart', playOnInteraction);
+                document.addEventListener('click', playOnInteraction);
             }
         };
 
-        const switchVideo = () => {
+        const switchVideo = async () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
             const currentVideo = videos[currentIndex] as HTMLVideoElement;
             const nextIndex = (currentIndex + 1) % videos.length;
             const nextVideo = videos[nextIndex] as HTMLVideoElement;
 
-            currentVideo.classList.remove('active');
-            currentVideo.classList.add('previous');
-            nextVideo.classList.add('active');
-
+            // Précharge et prépare la prochaine vidéo
             if (nextVideo.preload === 'none') {
                 nextVideo.preload = 'auto';
             }
 
-            playVideo(nextVideo);
+            try {
+                // Prépare la prochaine vidéo
+                nextVideo.style.transform = 'translateY(100%)';
+                nextVideo.style.opacity = '1';
+                await playVideo(nextVideo);
 
-            setTimeout(() => {
-                currentVideo.classList.remove('previous');
-            }, 1000);
+                // Animation de transition
+                currentVideo.classList.remove('active');
+                currentVideo.classList.add('previous');
+                nextVideo.classList.add('active');
 
-            currentIndex = nextIndex;
+                // Nettoie l'ancienne vidéo après la transition
+                setTimeout(() => {
+                    currentVideo.classList.remove('previous');
+                    isTransitioning = false;
+
+                    // Planifie la prochaine transition
+                    if (nextIndex === videos.length - 1) {
+                        // Pour la dernière vidéo, attendre sa fin naturelle
+                        nextVideo.addEventListener('ended', () => {
+                            currentIndex = 0;
+                            switchVideo();
+                        }, { once: true });
+                    } else {
+                        setTimeout(() => switchVideo(), TRANSITION_DURATION);
+                    }
+                }, 1000);
+
+                currentIndex = nextIndex;
+            } catch (error) {
+                console.error('Switch failed:', error);
+                isTransitioning = false;
+            }
         };
 
-        // Initial play with retry
-        const firstVideo = videos[0] as HTMLVideoElement;
-        const tryPlay = () => {
-            playVideo(firstVideo);
-            firstVideo.removeEventListener('loadedmetadata', tryPlay);
+        // Initialisation
+        const initializeCarousel = async () => {
+            const firstVideo = videos[0] as HTMLVideoElement;
+            
+            // Attendre que la vidéo soit chargée
+            if (firstVideo.readyState >= 2) {
+                await playVideo(firstVideo);
+                setTimeout(() => switchVideo(), TRANSITION_DURATION);
+            } else {
+                firstVideo.addEventListener('loadeddata', async () => {
+                    await playVideo(firstVideo);
+                    setTimeout(() => switchVideo(), TRANSITION_DURATION);
+                }, { once: true });
+            }
         };
-        firstVideo.addEventListener('loadedmetadata', tryPlay);
-
-        // Handle video end
-        videos.forEach((video) => {
-            video.addEventListener('ended', switchVideo);
-        });
 
         // Force play on iOS
-        const forcePlay = () => {
+        const forcePlayOnInteraction = () => {
             const currentVideo = videos[currentIndex] as HTMLVideoElement;
             playVideo(currentVideo);
+            document.removeEventListener('touchstart', forcePlayOnInteraction);
+            document.removeEventListener('click', forcePlayOnInteraction);
         };
 
-        document.addEventListener('touchstart', forcePlay, { once: true });
-        document.addEventListener('click', forcePlay, { once: true });
+        document.addEventListener('touchstart', forcePlayOnInteraction);
+        document.addEventListener('click', forcePlayOnInteraction);
+
+        // Démarrer le carrousel
+        initializeCarousel();
     });
 </script>
