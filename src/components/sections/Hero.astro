@@ -13,13 +13,13 @@ interface Video {
 
 const firstFrameImage = "/images/video1-first-frame.webp";
 const videos: Video[] = [
-    {
-        mp4: "/videos/video1.mp4",
-        webm: "/videos/video1.webm",
-        poster: firstFrameImage,
-        width: 380,
-        height: 760
-    },
+    // {
+    //     mp4: "/videos/video1.mp4",
+    //     webm: "/videos/video1.webm",
+    //     poster: firstFrameImage,
+    //     width: 380,
+    //     height: 760
+    // },
     {
         mp4: "/videos/video2.mp4",
         webm: "/videos/video2.webm",
@@ -27,20 +27,20 @@ const videos: Video[] = [
         width: 380,
         height: 760
     },
-    {
-        mp4: "/videos/video3.mp4",
-        webm: "/videos/video3.webm",
-        poster: firstFrameImage,
-        width: 380,
-        height: 760
-    },
-    {
-        mp4: "/videos/video4.mp4",
-        webm: "/videos/video4.webm",
-        poster: firstFrameImage,
-        width: 380,
-        height: 760
-    }
+    // {
+    //     mp4: "/videos/video3.mp4",
+    //     webm: "/videos/video3.webm",
+    //     poster: firstFrameImage,
+    //     width: 380,
+    //     height: 760
+    // },
+    // {
+    //     mp4: "/videos/video4.mp4",
+    //     webm: "/videos/video4.webm",
+    //     poster: firstFrameImage,
+    //     width: 380,
+    //     height: 760
+    // }
 ];
 ---
 
@@ -89,13 +89,14 @@ const videos: Video[] = [
                             playsinline
                             webkit-playsinline="true"
                             x-webkit-airplay="deny"
-                            preload={index === 0 ? "auto" : "none"}
+                            loop
+                            preload="auto"
                             data-index={index}
                             poster={video.poster}
                             width={video.width}
                             height={video.height}
                             aria-label={`Promotional video ${index + 1}`}
-                            style={index === 0 ? "opacity: 1; transform: translateY(0);" : ""}
+                            style="opacity: 1; transform: translateY(0);"
                         >
                             <source 
                                 src={video.webm} 
@@ -158,12 +159,6 @@ const videos: Video[] = [
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0;
-        transform: translateY(100%);
-        will-change: transform, opacity;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        transition: transform 1s ease-out, opacity 0.2s ease-out;
     }
 
     @media (min-width: 1024px) {
@@ -236,5 +231,23 @@ const videos: Video[] = [
 </style>
 
 <script>
-    import '../../scripts/heroVideo.ts';
+    // Simple video autoplay
+    document.addEventListener('DOMContentLoaded', () => {
+        const video = document.querySelector('.phone-video') as HTMLVideoElement;
+        if (video) {
+            const playVideo = async () => {
+                try {
+                    await video.play();
+                } catch (error) {
+                    console.error('Playback failed:', error);
+                }
+            };
+            
+            playVideo();
+            
+            // Fallback pour les navigateurs qui bloquent l'autoplay
+            document.addEventListener('click', playVideo, { once: true });
+            document.addEventListener('touchstart', playVideo, { once: true });
+        }
+    });
 </script>
