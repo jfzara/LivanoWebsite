@@ -3,44 +3,38 @@ import Button from "../shared/Button.astro";
 import Container from "../shared/Container.astro";
 import Paragraph from "../shared/Paragraph.astro";
 
-interface Video {
-    mp4: string;
-    webm: string;
-    poster: string;
+interface Image {
+    src: string;
+    alt: string;
     width: number;
     height: number;
 }
 
-const firstFrameImage = "/images/video1-first-frame.webp";
-const videos: Video[] = [
-    // {
-    //     mp4: "/videos/video1.mp4",
-    //     webm: "/videos/video1.webm",
-    //     poster: firstFrameImage,
-    //     width: 380,
-    //     height: 760
-    // },
+const images: Image[] = [
     {
-        mp4: "/videos/video2.mp4",
-        webm: "/videos/video2.webm",
-        poster: firstFrameImage,
+        src: "/images/snapshot1.webp",
+        alt: "Snapshot 1",
         width: 380,
         height: 760
     },
-    // {
-    //     mp4: "/videos/video3.mp4",
-    //     webm: "/videos/video3.webm",
-    //     poster: firstFrameImage,
-    //     width: 380,
-    //     height: 760
-    // },
-    // {
-    //     mp4: "/videos/video4.mp4",
-    //     webm: "/videos/video4.webm",
-    //     poster: firstFrameImage,
-    //     width: 380,
-    //     height: 760
-    // }
+    {
+        src: "/images/snapshot2.webp",
+        alt: "Snapshot 2",
+        width: 380,
+        height: 760
+    },
+    {
+        src: "/images/snapshot3.webp",
+        alt: "Snapshot 3",
+        width: 380,
+        height: 760
+    },
+    {
+        src: "/images/snapshot4.webp",
+        alt: "Snapshot 4",
+        width: 380,
+        height: 760
+    }
 ];
 ---
 
@@ -81,32 +75,17 @@ const videos: Video[] = [
 
         <div class="flex flex-1 lg:w-1/2 lg:h-auto relative lg:max-w-none lg:mx-0 mx-auto max-w-3xl">
             <div class="phone-frame">
-                <div class="video-container">
-                    {videos.map((video, index) => (
-                        <video 
-                            class="phone-video"
-                            muted 
-                            playsinline
-                            webkit-playsinline="true"
-                            x-webkit-airplay="deny"
-                            loop
-                            preload="auto"
+                <div class="carousel-container">
+                    {images.map((image, index) => (
+                        <img 
+                            class="carousel-image"
+                            src={image.src}
+                            alt={image.alt}
+                            width={image.width}
+                            height={image.height}
+                            loading={index === 0 ? "eager" : "lazy"}
                             data-index={index}
-                            poster={video.poster}
-                            width={video.width}
-                            height={video.height}
-                            aria-label={`Promotional video ${index + 1}`}
-                            style="opacity: 1; transform: translateY(0);"
-                        >
-                            <source 
-                                src={video.webm} 
-                                type="video/webm"
-                            />
-                            <source 
-                                src={video.mp4} 
-                                type="video/mp4"
-                            />
-                        </video>
+                        />
                     ))}
                 </div>
             </div>
@@ -143,7 +122,7 @@ const videos: Video[] = [
         z-index: 2;
     }
 
-    .video-container {
+    .carousel-container {
         position: relative;
         width: 100%;
         height: 100%;
@@ -152,13 +131,21 @@ const videos: Video[] = [
         contain: content;
     }
 
-    .phone-video {
+    .carousel-image {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        opacity: 0;
+        transform: translateY(100%);
+        transition: transform 0.5s ease-out, opacity 0.2s ease-out;
+    }
+
+    .carousel-image[data-index="0"] {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     @media (min-width: 1024px) {
@@ -231,23 +218,73 @@ const videos: Video[] = [
 </style>
 
 <script>
-    // Simple video autoplay
-    document.addEventListener('DOMContentLoaded', () => {
-        const video = document.querySelector('.phone-video') as HTMLVideoElement;
-        if (video) {
-            const playVideo = async () => {
-                try {
-                    await video.play();
-                } catch (error) {
-                    console.error('Playback failed:', error);
-                }
-            };
-            
-            playVideo();
-            
-            // Fallback pour les navigateurs qui bloquent l'autoplay
-            document.addEventListener('click', playVideo, { once: true });
-            document.addEventListener('touchstart', playVideo, { once: true });
+    class ImageCarousel {
+        private images: HTMLImageElement[];
+        private currentIndex: number;
+        private isTransitioning: boolean;
+        private readonly TRANSITION_DURATION = 500;
+        private readonly DISPLAY_DURATION = 3000;
+
+        constructor() {
+            this.images = Array.from(document.querySelectorAll('.carousel-image'));
+            this.currentIndex = 0;
+            this.isTransitioning = false;
+            this.init();
         }
-    });
+
+        private init(): void {
+            if (this.images.length === 0) return;
+            this.startCarousel();
+        }
+
+        private async switchImage(): Promise<void> {
+            if (this.isTransitioning) return;
+            this.isTransitioning = true;
+
+            const currentImage = this.images[this.currentIndex];
+            const nextIndex = (this.currentIndex + 1) % this.images.length;
+            const nextImage = this.images[nextIndex];
+
+            // Prépare la prochaine image
+            nextImage.style.transition = 'none';
+            nextImage.style.transform = 'translateY(100%)';
+            nextImage.style.opacity = '1';
+
+            // Force un reflow
+            void nextImage.offsetHeight;
+
+            // Applique la transition
+            requestAnimationFrame(() => {
+                currentImage.style.transition = `transform ${this.TRANSITION_DURATION}ms ease-out`;
+                nextImage.style.transition = `transform ${this.TRANSITION_DURATION}ms ease-out`;
+                
+                currentImage.style.transform = 'translateY(-100%)';
+                nextImage.style.transform = 'translateY(0)';
+            });
+
+            // Met à jour l'index
+            this.currentIndex = nextIndex;
+
+            // Nettoie après la transition
+            setTimeout(() => {
+                currentImage.style.opacity = '0';
+                currentImage.style.transform = 'translateY(100%)';
+                currentImage.style.transition = 'none';
+                this.isTransitioning = false;
+            }, this.TRANSITION_DURATION);
+        }
+
+        private startCarousel(): void {
+            setInterval(() => {
+                void this.switchImage();
+            }, this.DISPLAY_DURATION);
+        }
+    }
+
+    // Initialise le carrousel quand le DOM est prêt
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => new ImageCarousel());
+    } else {
+        new ImageCarousel();
+    }
 </script>
