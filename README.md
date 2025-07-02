@@ -54,4 +54,3 @@ astro.config.mjs      → configuration Astro
 tailwind.config.mjs   → configuration Tailwind
 package.json          → dépendances + scripts
 Installation locale
-
