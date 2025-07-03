@@ -5,38 +5,37 @@ Dans le cadre de mon stage chez Livano, entreprise spécialisée en marketing d�
 
 Technologies & Stack utilisées
 Front-End
+Astro : génération statique des pages pour un SEO optimal, structure modulaire
 
-Astro : rendu statique, excellent pour le SEO, intégration d’îlots React
+JavaScript : interactions dynamiques (formulaires, vidéos, événements DOM)
 
-React : composants dynamiques (formulaire, vidéos, interactions)
+TypeScript : typage statique pour un code plus robuste et maintenable
 
-Tailwind CSS : design responsive, utilitaire, rapide à mettre en œuvre
+Tailwind CSS : design responsive rapide à implémenter via classes utilitaires
 
 Back-End & API
+Astro API Routes : gestion des requêtes serveur, notamment pour le formulaire de contact
 
-Astro API Routes : gestion des requêtes POST pour formulaire de contact
-
-Resend API : envoi d’e-mails automatisés
+Resend API : envoi d’e-mails automatisés côté serveur
 
 Sécurité
+Cloudflare Turnstile : CAPTCHA invisible anti-spam
 
-Cloudflare Turnstile : captcha invisible, anti-spam
-
-Honeypot : champ caché pour bloquer les bots
+Honeypot : champ caché pour bloquer les soumissions automatisées
 
 UX/UI
+Thème adaptatif : détection automatique des préférences utilisateur (mode clair/sombre)
 
-Thème adaptatif : détection des préférences (clair/sombre)
+Lecteur vidéo custom : préchargement optimisé et transitions fluides
 
-Composant VideoPlayer : préchargement + transitions fluides
-
-Navigation responsive : compatible mobile / desktop
+Navigation responsive : fluide sur mobile et bureau
 
 Développement & Outils
+Node.js + npm : environnement de développement, gestion des dépendances
 
-Node.js + npm : environnement de développement, gestion des scripts
+Git + GitHub : versionnement, collaboration et déploiement
 
-Git + GitHub : versionnement et hébergement du code source
+Python : automatisation de certaines tâches d’optimisation (ex. : traitement d’assets, scripts de build)
 
 Architecture du projet
 vbnet
