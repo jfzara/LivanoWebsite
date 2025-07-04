@@ -49,19 +49,4 @@ Git + GitHub : versionnement, collaboration et déploiement
 
 Python : automatisation de certaines tâches d’optimisation (ex. : traitement d’assets, scripts de build)
 
-Architecture du projet
-vbnet
-Copier
-Modifier
-src/
-├── components/       → composants Astro & React
-├── layouts/          → templates de page
-├── pages/            → routes du site
-├── api/              → logique serveur (formulaire)
-├── scripts/          → JS/TS pour l'interactivité
-public/               → fichiers statiques
-.env                  → variables d’environnement
-astro.config.mjs      → configuration Astro
-tailwind.config.mjs   → configuration Tailwind
-package.json          → dépendances + scripts
-Installation locale
+
