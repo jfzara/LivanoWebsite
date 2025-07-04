@@ -1,6 +1,8 @@
 
 # Livano Agency – Refonte Web (Projet de stage)
 Par Jean Fabrice ZARA: https://www.linkedin.com/in/jfzara-developpeur-react-node-montreal/
+
+
 Dans le cadre de mon stage chez Livano, entreprise spécialisée en marketing d’affiliation et d’influence, j’ai été chargé de la refonte complète du site vitrine de l’agence. Ce stage, réalisé du 16 décembre 2024 au 21 février 2025, m’a permis de concevoir et de développer une application web moderne, performante, sécurisée et alignée avec les besoins de l’entreprise.
 
 Technologies & Stack utilisées
